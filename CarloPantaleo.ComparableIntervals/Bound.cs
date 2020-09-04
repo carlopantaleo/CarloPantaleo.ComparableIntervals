@@ -176,6 +176,21 @@ namespace CarloPantaleo.ComparableIntervals {
             return !Equals(left, right);
         }
 
+        public override string ToString() {
+            switch (Type) {
+                case BoundType.Closed:
+                    return $"[{_value}]";
+                case BoundType.Open:
+                    return $"({_value})";
+                case BoundType.NegativeInfinite:
+                    return "-Inf";
+                case BoundType.PositiveInfinite:
+                    return "+Inf";
+                default:
+                    return base.ToString();
+            }
+        }
+
         /// <summary>
         /// Returns the minimum bound between two, according to the defined comparison rules.
         /// </summary>
