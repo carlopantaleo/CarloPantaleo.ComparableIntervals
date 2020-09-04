@@ -86,29 +86,37 @@ namespace CarloPantaleo.ComparableIntervals {
             return bound._value;
         }
 
-        public static bool operator <(Bound<T> left, T right) => Compare(right, left) > 0;
+        public static bool operator <(Bound<T> left, T right) => (Compare(right, left) ?? 1) > 0;
 
-        public static bool operator <=(Bound<T> left, T right) => (Compare(right, left) ?? -1) >= 0;
+        public static bool operator <=(Bound<T> left, T right) => (Compare(right, left) ?? 1) >= 0;
 
-        public static bool operator >(Bound<T> left, T right) => Compare(right, left) < 0;
+        public static bool operator >(Bound<T> left, T right) => (Compare(right, left) ?? -1) < 0;
 
-        public static bool operator >=(Bound<T> left, T right) => (Compare(right, left) ?? 1) <= 0;
+        public static bool operator >=(Bound<T> left, T right) => (Compare(right, left) ?? -1) <= 0;
 
-        public static bool operator <(T left, Bound<T> right) => Compare(left, right) < 0;
+        public static bool operator <(T left, Bound<T> right) => (Compare(left, right) ?? -1) < 0;
 
-        public static bool operator <=(T left, Bound<T> right) => (Compare(left, right) ?? 1) <= 0;
+        public static bool operator <=(T left, Bound<T> right) => (Compare(left, right) ?? -1) <= 0;
 
-        public static bool operator >(T left, Bound<T> right) => Compare(left, right) > 0;
+        public static bool operator >(T left, Bound<T> right) => (Compare(left, right) ?? 1) > 0;
 
-        public static bool operator >=(T left, Bound<T> right) => (Compare(left, right) ?? -1) >= 0;
+        public static bool operator >=(T left, Bound<T> right) => (Compare(left, right) ?? 1) >= 0;
 
-        public static bool operator <(Bound<T> left, Bound<T> right) => Compare(left, right) < 0;
+        public static bool operator <(Bound<T> left, Bound<T> right) =>
+            (Compare(left, right) ??
+             (left.Type == BoundType.PositiveInfinite || left.Type == BoundType.NegativeInfinite ? 1 : -1)) < 0;
 
-        public static bool operator <=(Bound<T> left, Bound<T> right) => (Compare(left, right) ?? 1) <= 0;
+        public static bool operator <=(Bound<T> left, Bound<T> right) => 
+            (Compare(left, right) ?? 
+             (left.Type == BoundType.PositiveInfinite || left.Type == BoundType.NegativeInfinite ? 1 : -1)) <= 0;
 
-        public static bool operator >(Bound<T> left, Bound<T> right) => Compare(left, right) > 0;
+        public static bool operator >(Bound<T> left, Bound<T> right) => 
+            (Compare(left, right) ?? 
+             (left.Type == BoundType.PositiveInfinite || left.Type == BoundType.NegativeInfinite ? -1 : 1)) > 0;
 
-        public static bool operator >=(Bound<T> left, Bound<T> right) => (Compare(left, right) ?? -1) >= 0;
+        public static bool operator >=(Bound<T> left, Bound<T> right) => 
+            (Compare(left, right) ?? 
+             (left.Type == BoundType.PositiveInfinite || left.Type == BoundType.NegativeInfinite ? -1 : 1)) >= 0;
 
         private static int? Compare(T left, Bound<T> right) {
             switch (right.Type) {
@@ -196,7 +204,7 @@ namespace CarloPantaleo.ComparableIntervals {
         /// </summary>
         /// <remarks>See <see cref="Bound{T}"/> for the comparison rules.</remarks>
         public static Bound<T> Min(Bound<T> left, Bound<T> right) => left <= right ? left : right;
-        
+
         /// <summary>
         /// Returns the maximum bound between two, according to the defined comparison rules.
         /// </summary>
