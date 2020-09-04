@@ -153,6 +153,6 @@ namespace CarloPantaleo.ComparableIntervals {
             throw new NullReferenceException("Upper bound is undefined on empty interval.");
 
         public override Bound<T> LowerBound =>
-            throw new NullReferenceException("Upper bound is undefined on empty interval.");
+            throw new NullReferenceException("Lower bound is undefined on empty interval.");
     }
 }
