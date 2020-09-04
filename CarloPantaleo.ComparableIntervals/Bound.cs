@@ -7,10 +7,18 @@ namespace CarloPantaleo.ComparableIntervals {
     /// </summary>
     /// <typeparam name="T">The type of the bound, which must be <see cref="IComparable"/>.</typeparam>
     /// <remarks>
-    /// <see cref="Bound{T}"/> is not <see cref="IComparable"/>, however comparison operators are provided in order to
-    /// compare objects of type <see cref="T"/> to the bound itself. For open or closed intervals, this is the same as
-    /// casting the bound to <see cref="T"/> and comparing the two objects of type <see cref="T"/>. Those operators
-    /// are eventually handy when comparing an object against an infinite interval.
+    /// <see cref="Bound{T}"/> is not <see cref="IComparable"/>, however comparison operators are provided and
+    /// comparison between bounds is defined as follows:
+    /// <ul>
+    ///     <li>Comparing two negative or positive infinite bounds always returns false.</li>
+    ///     <li>A negative infinite bound is always less than a positive infinite one and any other finite value.</li>
+    ///     <li>A positive infinite bound is always greater than a negative infinite one and any other finite value.</li>
+    ///     <li>If the boundary value of the two bounds is the same and the two bounds are both open or closed, the two
+    ///     bounds are considered equal.</li>
+    ///     <li>If the boundary value of the two bounds is the same, one of the two bounds is open and the other one
+    ///     is closed, the comparison is undefined (i.e., with <c>a</c> closed and <c>b</c> open, <c>a > b</c> and
+    ///     <c>a &lt; b</c> are both true, while <c>a == b</c> is false).</li>
+    /// </ul>
     /// </remarks>
     public readonly struct Bound<T> where T : IComparable {
         private readonly T _value;
@@ -24,7 +32,7 @@ namespace CarloPantaleo.ComparableIntervals {
         /// <summary>
         /// Creates a closed bound.
         /// </summary>
-        /// <param name="value">The value of the bound.</param>
+        /// <param name="value">The boundary value.</param>
         /// <returns>The bound.</returns>
         /// <exception cref="ArgumentNullException">If <see cref="value"/> is null.</exception>
         public static Bound<T> Closed(T value) {
@@ -38,7 +46,7 @@ namespace CarloPantaleo.ComparableIntervals {
         /// <summary>
         /// Creates an open bound.
         /// </summary>
-        /// <param name="value">The value of the bound.</param>
+        /// <param name="value">The boundary value.</param>
         /// <returns>The bound.</returns>
         /// <exception cref="ArgumentNullException">If <see cref="value"/> is null.</exception>
         public static Bound<T> Open(T value) {
@@ -66,9 +74,9 @@ namespace CarloPantaleo.ComparableIntervals {
         }
 
         /// <summary>
-        /// Gets the exact value of the bound (if it's closed), or the limit it approaches to (if it's open). 
+        /// Gets the boundary value. 
         /// </summary>
-        /// <param name="bound">The bound to get the value of.</param>
+        /// <param name="bound">The bound to get the boundary value of.</param>
         /// <exception cref="InvalidCastException">If the bound is not finite.</exception>
         public static implicit operator T(Bound<T> bound) {
             if (bound.Type == BoundType.NegativeInfinite || bound.Type == BoundType.PositiveInfinite) {
@@ -78,95 +86,76 @@ namespace CarloPantaleo.ComparableIntervals {
             return bound._value;
         }
 
-        public static bool operator <(Bound<T> left, T right) {
-            switch (left.Type) {
+        public static bool operator <(Bound<T> left, T right) => Compare(right, left) > 0;
+
+        public static bool operator <=(Bound<T> left, T right) => (Compare(right, left) ?? -1) >= 0;
+
+        public static bool operator >(Bound<T> left, T right) => Compare(right, left) < 0;
+
+        public static bool operator >=(Bound<T> left, T right) => (Compare(right, left) ?? 1) <= 0;
+
+        public static bool operator <(T left, Bound<T> right) => Compare(left, right) < 0;
+
+        public static bool operator <=(T left, Bound<T> right) => (Compare(left, right) ?? 1) <= 0;
+
+        public static bool operator >(T left, Bound<T> right) => Compare(left, right) > 0;
+
+        public static bool operator >=(T left, Bound<T> right) => (Compare(left, right) ?? -1) >= 0;
+
+        public static bool operator <(Bound<T> left, Bound<T> right) => Compare(left, right) < 0;
+
+        public static bool operator <=(Bound<T> left, Bound<T> right) => (Compare(left, right) ?? 1) <= 0;
+
+        public static bool operator >(Bound<T> left, Bound<T> right) => Compare(left, right) > 0;
+
+        public static bool operator >=(Bound<T> left, Bound<T> right) => (Compare(left, right) ?? -1) >= 0;
+
+        private static int? Compare(T left, Bound<T> right) {
+            switch (right.Type) {
                 case BoundType.NegativeInfinite:
-                    return true;
+                    return 1;
                 case BoundType.PositiveInfinite:
-                    return false;
-                default:
-                    return ((T) left).CompareTo(right) < 0;
-            }
-        }
-        
-        public static bool operator <=(Bound<T> left, T right) {
-            switch (left.Type) {
-                case BoundType.NegativeInfinite:
-                    return true;
-                case BoundType.PositiveInfinite:
-                    return false;
-                default:
-                    return ((T) left).CompareTo(right) <= 0;
+                    return -1;
+                case BoundType.Closed:
+                    return left.CompareTo((T) right);
+                default: {
+                    int cmp = left.CompareTo((T) right);
+                    return cmp == 0 ? (int?) null : cmp;
+                }
             }
         }
 
-        public static bool operator >(Bound<T> left, T right) {
-            switch (left.Type) {
-                case BoundType.NegativeInfinite:
-                    return false;
-                case BoundType.PositiveInfinite:
-                    return true;
-                default:
-                    return ((T) left).CompareTo(right) > 0;
+        private static int? Compare(Bound<T> left, Bound<T> right) {
+            if (left.Type == right.Type &&
+                (left.Type == BoundType.NegativeInfinite || left.Type == BoundType.PositiveInfinite)) {
+                return null;
             }
-        }        
-        
-        public static bool operator >=(Bound<T> left, T right) {
-            switch (left.Type) {
-                case BoundType.NegativeInfinite:
-                    return false;
-                case BoundType.PositiveInfinite:
-                    return true;
-                default:
-                    return ((T) left).CompareTo(right) >= 0;
+
+            if (left.Type == BoundType.NegativeInfinite) {
+                return -1;
             }
-        }
-        
-        public static bool operator <(T left, Bound<T> right) {
-            switch (right.Type) {
-                case BoundType.NegativeInfinite:
-                    return false;
-                case BoundType.PositiveInfinite:
-                    return true;
-                default:
-                    return left.CompareTo((T) right) < 0;
+
+            if (right.Type == BoundType.PositiveInfinite) {
+                return 1;
             }
-        }
-        
-        public static bool operator <=(T left, Bound<T> right) {
-            switch (right.Type) {
-                case BoundType.NegativeInfinite:
-                    return false;
-                case BoundType.PositiveInfinite:
-                    return true;
-                default:
-                    return left.CompareTo((T) right) <= 0;
+
+            if (EqualityComparer<T>.Default.Equals(left._value, right._value)) {
+                return left.Type == right.Type ? (int?) 0 : null;
             }
-        }
-        public static bool operator >(T left, Bound<T> right) {
-            switch (right.Type) {
-                case BoundType.NegativeInfinite:
-                    return true;
-                case BoundType.PositiveInfinite:
-                    return false;
-                default:
-                    return left.CompareTo((T) right) > 0;
-            }
-        }
-        
-        public static bool operator >=(T left, Bound<T> right) {
-            switch (right.Type) {
-                case BoundType.NegativeInfinite:
-                    return true;
-                case BoundType.PositiveInfinite:
-                    return false;
-                default:
-                    return left.CompareTo((T) right) >= 0;
-            }
+
+            return left._value.CompareTo(right._value);
         }
 
+        /// <summary>
+        /// Two bounds are considered equal if their type (open, closed) and their values are equal. Infinite bounds
+        /// are always considered not equal.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(Bound<T> other) {
-            return EqualityComparer<T>.Default.Equals(_value, other._value) && Type == other.Type;
+            return Type != BoundType.PositiveInfinite &&
+                   Type != BoundType.NegativeInfinite &&
+                   EqualityComparer<T>.Default.Equals(_value, other._value) && Type == other.Type;
         }
 
         public override bool Equals(object obj) {
@@ -186,6 +175,18 @@ namespace CarloPantaleo.ComparableIntervals {
         public static bool operator !=(Bound<T> left, Bound<T> right) {
             return !Equals(left, right);
         }
+
+        /// <summary>
+        /// Returns the minimum bound between two, according to the defined comparison rules.
+        /// </summary>
+        /// <remarks>See <see cref="Bound{T}"/> for the comparison rules.</remarks>
+        public static Bound<T> Min(Bound<T> left, Bound<T> right) => left <= right ? left : right;
+        
+        /// <summary>
+        /// Returns the maximum bound between two, according to the defined comparison rules.
+        /// </summary>
+        /// <remarks>See <see cref="Bound{T}"/> for the comparison rules.</remarks>
+        public static Bound<T> Max(Bound<T> left, Bound<T> right) => left >= right ? left : right;
     }
 
     /// <summary>
