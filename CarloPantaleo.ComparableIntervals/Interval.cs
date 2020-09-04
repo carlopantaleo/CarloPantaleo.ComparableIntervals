@@ -2,8 +2,8 @@
 
 namespace CarloPantaleo.ComparableIntervals {
     public class Interval<T> where T : IComparable {
-        public Bound<T> UpperBound { get; }
-        public Bound<T> LowerBound { get; }
+        public virtual Bound<T> UpperBound { get; }
+        public virtual Bound<T> LowerBound { get; }
 
         #region Constructors
         /// <summary>
@@ -134,5 +134,10 @@ namespace CarloPantaleo.ComparableIntervals {
     }
 
     public class EmptyInterval<T> : Interval<T> where T : IComparable {
+        public override Bound<T> UpperBound =>
+            throw new NullReferenceException("Upper bound is undefined on empty interval.");
+
+        public override Bound<T> LowerBound =>
+            throw new NullReferenceException("Upper bound is undefined on empty interval.");
     }
 }
