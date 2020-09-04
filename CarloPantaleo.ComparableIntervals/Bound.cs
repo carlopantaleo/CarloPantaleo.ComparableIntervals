@@ -131,11 +131,11 @@ namespace CarloPantaleo.ComparableIntervals {
                 return null;
             }
 
-            if (left.Type == BoundType.NegativeInfinite) {
+            if (left.Type == BoundType.NegativeInfinite || right.Type == BoundType.PositiveInfinite) {
                 return -1;
             }
 
-            if (right.Type == BoundType.PositiveInfinite) {
+            if (left.Type == BoundType.PositiveInfinite || right.Type == BoundType.NegativeInfinite) {
                 return 1;
             }
 
