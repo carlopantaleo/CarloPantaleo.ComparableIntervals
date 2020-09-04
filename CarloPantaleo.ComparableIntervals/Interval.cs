@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 namespace CarloPantaleo.ComparableIntervals {
     public class Interval<T> where T : IComparable {
@@ -6,12 +7,13 @@ namespace CarloPantaleo.ComparableIntervals {
         public virtual Bound<T> LowerBound { get; }
 
         #region Constructors
+
         /// <summary>
         /// Creates an interval given its bounds.
         /// </summary>
         /// <param name="lowerBound">The lower bound.</param>
         /// <param name="upperBound">The upper bound.</param>
-        public Interval(Bound<T> lowerBound, Bound<T> upperBound) {
+        private Interval(Bound<T> lowerBound, Bound<T> upperBound) {
             CheckBounds(lowerBound, upperBound);
             LowerBound = lowerBound;
             UpperBound = upperBound;
@@ -29,7 +31,7 @@ namespace CarloPantaleo.ComparableIntervals {
         /// <param name="lowerBound">The lower bound.</param>
         /// <param name="upperBound">The upper bound.</param>
         public static Interval<T> Open(T lowerBound, T upperBound) {
-            return new Interval<T>(Bound<T>.Open(lowerBound), Bound<T>.Open(upperBound));
+            return FromBounds(Bound<T>.Open(lowerBound), Bound<T>.Open(upperBound));
         }
 
         /// <summary>
@@ -38,7 +40,7 @@ namespace CarloPantaleo.ComparableIntervals {
         /// <param name="lowerBound">The lower bound.</param>
         /// <param name="upperBound">The upper bound.</param>
         public static Interval<T> Closed(T lowerBound, T upperBound) {
-            return new Interval<T>(Bound<T>.Closed(lowerBound), Bound<T>.Closed(upperBound));
+            return FromBounds(Bound<T>.Closed(lowerBound), Bound<T>.Closed(upperBound));
         }
 
         /// <summary>
@@ -47,7 +49,7 @@ namespace CarloPantaleo.ComparableIntervals {
         /// <param name="lowerBound">The lower bound.</param>
         /// <param name="upperBound">The upper bound.</param>
         public static Interval<T> OpenClosed(T lowerBound, T upperBound) {
-            return new Interval<T>(Bound<T>.Open(lowerBound), Bound<T>.Closed(upperBound));
+            return FromBounds(Bound<T>.Open(lowerBound), Bound<T>.Closed(upperBound));
         }
 
         /// <summary>
@@ -56,7 +58,14 @@ namespace CarloPantaleo.ComparableIntervals {
         /// <param name="lowerBound">The lower bound.</param>
         /// <param name="upperBound">The upper bound.</param>
         public static Interval<T> ClosedOpen(T lowerBound, T upperBound) {
-            return new Interval<T>(Bound<T>.Closed(lowerBound), Bound<T>.Open(upperBound));
+            return FromBounds(Bound<T>.Closed(lowerBound), Bound<T>.Open(upperBound));
+        }
+
+        public static Interval<T> FromBounds(Bound<T> lowerBound, Bound<T> upperBound) {
+            CheckBounds(lowerBound, upperBound);
+            return lowerBound == upperBound && (lowerBound.Type == BoundType.Open || upperBound.Type == BoundType.Open)
+                ? new EmptyInterval<T>()
+                : new Interval<T>(lowerBound, upperBound);
         }
 
         /// <summary>
@@ -79,11 +88,12 @@ namespace CarloPantaleo.ComparableIntervals {
             return new EmptyInterval<T>();
         }
 
+        [UsedImplicitly]
         private static void CheckBounds(Bound<T> lowerBound, Bound<T> upperBound) {
             if (lowerBound == null || upperBound == null) {
-                throw new ArgumentException("Bounds cannot be null.");    
+                throw new ArgumentException("Bounds cannot be null.");
             }
-            
+
             if (lowerBound.Type == BoundType.PositiveInfinite) {
                 throw new ArgumentException("Lower bound cannot be positive infinite.");
             }
@@ -97,18 +107,16 @@ namespace CarloPantaleo.ComparableIntervals {
                 throw new ArgumentException("Lower bound must be <= upper bound.");
             }
         }
-        
+
         #endregion
 
-        /// <summary>
-        /// Checks if an interval is empty.
-        /// </summary>
-        public bool IsEmpty() => this is EmptyInterval<T>;
+        #region Equality Operators
 
         protected bool Equals(Interval<T> other) {
             if (other is EmptyInterval<T>) {
                 return this is EmptyInterval<T>;
             }
+
             return UpperBound.Equals(other.UpperBound) && LowerBound.Equals(other.LowerBound);
         }
 
@@ -131,6 +139,13 @@ namespace CarloPantaleo.ComparableIntervals {
         public static bool operator !=(Interval<T> left, Interval<T> right) {
             return !Equals(left, right);
         }
+
+        #endregion
+
+        /// <summary>
+        /// Checks if an interval is empty.
+        /// </summary>
+        public bool IsEmpty() => this is EmptyInterval<T>;
     }
 
     public class EmptyInterval<T> : Interval<T> where T : IComparable {
