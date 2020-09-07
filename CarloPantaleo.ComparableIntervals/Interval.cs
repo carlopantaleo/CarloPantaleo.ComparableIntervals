@@ -148,6 +148,12 @@ namespace CarloPantaleo.ComparableIntervals {
         public bool IsEmpty() => this is EmptyInterval<T>;
     }
 
+    /// <summary>
+    /// Interval operations are implemented as extension methods, so they can be called as static or instance methods.
+    /// </summary>
+    public static class IntervalExtensions {
+    }
+
     public class EmptyInterval<T> : Interval<T> where T : IComparable {
         public override Bound<T> UpperBound =>
             throw new NullReferenceException("Upper bound is undefined on empty interval.");

@@ -150,6 +150,34 @@ namespace CarloPantaleo.ComparableIntervals.Tests {
 
         [Theory]
         [MemberData(nameof(IntBoundsData))]
+        public void OpEqual(Bound<int> left, Bound<int> right, int outcome) {
+            var outcomesMap = new Dictionary<int, bool> {
+                {-1, false},
+                {0, true},
+                {1, false},
+                {2, false},
+                {3, false}
+            };
+            
+            Assert.Equal(outcomesMap[outcome], left == right);
+        }
+        
+        [Theory]
+        [MemberData(nameof(IntBoundsData))]
+        public void OpNotEqual(Bound<int> left, Bound<int> right, int outcome) {
+            var outcomesMap = new Dictionary<int, bool> {
+                {-1, true},
+                {0, false},
+                {1, true},
+                {2, true},
+                {3, true}
+            };
+            
+            Assert.Equal(outcomesMap[outcome], left != right);
+        }
+
+        [Theory]
+        [MemberData(nameof(IntBoundsData))]
         public void Min(Bound<int> left, Bound<int> right, int outcome) {
             switch (outcome) {
                 case -1:
