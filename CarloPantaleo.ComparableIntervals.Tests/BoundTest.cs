@@ -148,6 +148,74 @@ namespace CarloPantaleo.ComparableIntervals.Tests {
             }
         }
 
+        [Theory]
+        [MemberData(nameof(IntBoundsData))]
+        public void Min(Bound<int> left, Bound<int> right, int outcome) {
+            switch (outcome) {
+                case -1:
+                    if (left.Type == BoundType.NegativeInfinite) {
+                        Assert.Equal(BoundType.NegativeInfinite, Bound<int>.Min(left, right).Type);
+                    } else {
+                        Assert.Equal(left, Bound<int>.Min(left, right));
+                    }
+                    break;
+                case 0:
+                    Assert.Equal(left, Bound<int>.Min(left, right));
+                    Assert.Equal(right, Bound<int>.Min(left, right));
+                    break;
+                case 1:
+                    if (right.Type == BoundType.NegativeInfinite) {
+                        Assert.Equal(BoundType.NegativeInfinite, Bound<int>.Min(left, right).Type);
+                    } else {
+                        Assert.Equal(right, Bound<int>.Min(left, right));
+                    }
+                    break;
+                case 2 when left.Type == BoundType.Closed:
+                    Assert.Equal(left, Bound<int>.Min(left, right));
+                    break;
+                case 2 when right.Type == BoundType.Closed:
+                    Assert.Equal(right, Bound<int>.Min(left, right));
+                    break;
+                case 3:
+                    Assert.Equal(left.Type, Bound<int>.Min(left, right).Type);
+                    break;
+            }
+        }
+        
+        [Theory]
+        [MemberData(nameof(IntBoundsData))]
+        public void Max(Bound<int> left, Bound<int> right, int outcome) {
+            switch (outcome) {
+                case -1:
+                    if (right.Type == BoundType.PositiveInfinite) {
+                        Assert.Equal(BoundType.PositiveInfinite, Bound<int>.Max(left, right).Type);
+                    } else {
+                        Assert.Equal(right, Bound<int>.Max(left, right));
+                    }
+                    break;
+                case 0:
+                    Assert.Equal(left, Bound<int>.Max(left, right));
+                    Assert.Equal(right, Bound<int>.Max(left, right));
+                    break;
+                case 1:
+                    if (left.Type == BoundType.PositiveInfinite) {
+                        Assert.Equal(BoundType.PositiveInfinite, Bound<int>.Max(left, right).Type);
+                    } else {
+                        Assert.Equal(left, Bound<int>.Max(left, right));
+                    }
+                    break;
+                case 2 when left.Type == BoundType.Closed:
+                    Assert.Equal(left, Bound<int>.Max(left, right));
+                    break;
+                case 2 when right.Type == BoundType.Closed:
+                    Assert.Equal(right, Bound<int>.Max(left, right));
+                    break;
+                case 3:
+                    Assert.Equal(left.Type, Bound<int>.Max(left, right).Type);
+                    break;
+            }
+        }
+
         public static IEnumerable<object[]> IntBoundsData =>
             new List<object[]> {
                 new object[] {Bound<int>.Open(1), Bound<int>.Open(2), -1},
