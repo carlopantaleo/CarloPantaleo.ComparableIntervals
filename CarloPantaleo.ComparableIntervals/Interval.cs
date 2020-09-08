@@ -102,8 +102,9 @@ namespace CarloPantaleo.ComparableIntervals {
                 throw new ArgumentException("Upper bound cannot be negative infinite.");
             }
 
-            if (lowerBound.Type != BoundType.NegativeInfinite && (T) lowerBound > upperBound ||
-                upperBound.Type != BoundType.PositiveInfinite && lowerBound > (T) upperBound) {
+            if (lowerBound.Type != BoundType.Open && upperBound.Type != BoundType.Open && lowerBound != upperBound &&
+                (lowerBound.Type != BoundType.NegativeInfinite && (T) lowerBound > upperBound ||
+                 upperBound.Type != BoundType.PositiveInfinite && lowerBound > (T) upperBound)) {
                 throw new ArgumentException("Lower bound must be <= upper bound.");
             }
         }
@@ -146,12 +147,56 @@ namespace CarloPantaleo.ComparableIntervals {
         /// Checks if an interval is empty.
         /// </summary>
         public bool IsEmpty() => this is EmptyInterval<T>;
+
+        public override string ToString() =>
+            $"{(LowerBound.Type == BoundType.Closed ? "[" : "(")}{(T) LowerBound}, " +
+            $"{(T) UpperBound}{(UpperBound.Type == BoundType.Closed ? "]" : ")")}";
     }
 
     /// <summary>
     /// Interval operations are implemented as extension methods, so they can be called as static or instance methods.
     /// </summary>
     public static class IntervalExtensions {
+        public static Interval<T> Intersection<T>(this Interval<T> first, Interval<T> second) where T : IComparable {
+            var lowerBound = LowerMax(first.LowerBound, second.LowerBound);
+            var upperBound = UpperMin(first.UpperBound, second.UpperBound);
+
+            return lowerBound > upperBound
+                ? Interval<T>.Empty()
+                : Interval<T>.FromBounds(lowerBound, upperBound);
+        }
+
+        private static Bound<T> LowerMin<T>(Bound<T> left, Bound<T> right) where T : IComparable {
+            if (left < right && left > right) {
+                return left.Type == BoundType.Closed ? left : right;
+            }
+
+            return left <= right ? left : right;
+        }
+
+        private static Bound<T> UpperMin<T>(Bound<T> left, Bound<T> right) where T : IComparable {
+            if (left < right && left > right) {
+                return left.Type == BoundType.Open ? left : right;
+            }
+
+            return left <= right ? left : right;
+        }
+
+        private static Bound<T> LowerMax<T>(Bound<T> left, Bound<T> right) where T : IComparable {
+            if (left < right && left > right) {
+                return left.Type == BoundType.Open ? left : right;
+            }
+
+            return left >= right ? left : right;
+        }
+
+        private static Bound<T> UpperMax<T>(Bound<T> left, Bound<T> right) where T : IComparable {
+            if (left < right && left > right) {
+                return left.Type == BoundType.Closed ? left : right;
+            }
+
+            return left >= right ? left : right;
+        }
     }
 
     public class EmptyInterval<T> : Interval<T> where T : IComparable {
@@ -160,5 +205,9 @@ namespace CarloPantaleo.ComparableIntervals {
 
         public override Bound<T> LowerBound =>
             throw new NullReferenceException("Lower bound is undefined on empty interval.");
+
+        public override string ToString() {
+            return "∅";
+        }
     }
 }
