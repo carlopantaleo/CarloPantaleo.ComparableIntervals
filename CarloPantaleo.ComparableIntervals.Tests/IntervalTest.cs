@@ -39,6 +39,8 @@ namespace CarloPantaleo.ComparableIntervals.Tests {
                 new object[] {Interval<int>.Closed(1, 5), Interval<int>.Closed(1,5), Interval<int>.Closed(1,5)},
                 new object[] {Interval<int>.Closed(1, 5), Interval<int>.Open(1,5), Interval<int>.Open(1,5)},
                 new object[] {Interval<int>.Open(1, 5), Interval<int>.Open(1,5), Interval<int>.Open(1,5)},
+                new object[] {Interval<int>.Open(1, 5), Interval<int>.Empty(), Interval<int>.Empty()},
+                new object[] {Interval<int>.Empty(), Interval<int>.Open(1, 5), Interval<int>.Empty()},
             };
     }
 }

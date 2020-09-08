@@ -158,6 +158,10 @@ namespace CarloPantaleo.ComparableIntervals {
     /// </summary>
     public static class IntervalExtensions {
         public static Interval<T> Intersection<T>(this Interval<T> first, Interval<T> second) where T : IComparable {
+            if (first.IsEmpty() || second.IsEmpty()) {
+                return Interval<T>.Empty();
+            }
+            
             var lowerBound = LowerMax(first.LowerBound, second.LowerBound);
             var upperBound = UpperMin(first.UpperBound, second.UpperBound);
 
