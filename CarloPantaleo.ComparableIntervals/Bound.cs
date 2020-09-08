@@ -198,38 +198,6 @@ namespace CarloPantaleo.ComparableIntervals {
                     return base.ToString();
             }
         }
-
-        /// <summary>
-        /// Returns the minimum bound between two, according to the defined comparison rules.
-        /// </summary>
-        /// <remarks>
-        /// See <see cref="Bound{T}"/> for the comparison rules.
-        /// <para>In case the two boundaries are equal, and one bound is open and the other one is closed, the closed
-        /// one is always returned.</para>
-        /// </remarks>
-        public static Bound<T> Min(Bound<T> left, Bound<T> right) {
-            if (left < right && left > right) {
-                return left.Type == BoundType.Closed ? left : right;
-            }
-            
-            return left <= right ? left : right;
-        }
-
-        /// <summary>
-        /// Returns the maximum bound between two, according to the defined comparison rules.
-        /// </summary>
-        /// <remarks>
-        /// See <see cref="Bound{T}"/> for the comparison rules.
-        /// <para>In case the two boundaries are equal, and one bound is open and the other one is closed, the closed
-        /// one is always returned.</para>
-        /// </remarks>
-        public static Bound<T> Max(Bound<T> left, Bound<T> right) {
-            if (left < right && left > right) {
-                return left.Type == BoundType.Closed ? left : right;
-            }
-
-            return left >= right ? left : right;
-        }
     }
 
     /// <summary>
