@@ -148,20 +148,73 @@ namespace CarloPantaleo.ComparableIntervals {
         /// </summary>
         public bool IsEmpty() => this is EmptyInterval<T>;
 
-        public override string ToString() =>
-            $"{(LowerBound.Type == BoundType.Closed ? "[" : "(")}{(T) LowerBound}, " +
-            $"{(T) UpperBound}{(UpperBound.Type == BoundType.Closed ? "]" : ")")}";
+        public override string ToString() {
+            return $"{(LowerBound.Type == BoundType.Closed ? "[" : "(")}{GetVal(LowerBound)}, " +
+                   $"{GetVal(UpperBound)}{(UpperBound.Type == BoundType.Closed ? "]" : ")")}";
+
+            string GetVal(Bound<T> bound) {
+                switch (bound.Type) {
+                    case BoundType.NegativeInfinite:
+                        return "-∞";
+                    case BoundType.PositiveInfinite:
+                        return "∞";
+                    default:
+                        return ((T) bound).ToString();
+                }
+            }
+            ;
+            
+        }
     }
 
     /// <summary>
     /// Interval operations are implemented as extension methods, so they can be called as static or instance methods.
     /// </summary>
     public static class IntervalExtensions {
+        /// <summary>
+        /// Gets the intersection of two intervals.
+        /// </summary>
+        /// <param name="first">The first interval.</param>
+        /// <param name="second">The second interval.</param>
+        /// <typeparam name="T">The <see cref="IComparable"/> type of the interval.</typeparam>
+        /// <returns>An interval representing the intersection.</returns>
         public static Interval<T> Intersection<T>(this Interval<T> first, Interval<T> second) where T : IComparable {
             if (first.IsEmpty() || second.IsEmpty()) {
                 return Interval<T>.Empty();
             }
+
+            return UncheckedIntersection(first, second);
+        }
+
+        /// <summary>
+        /// Gets the union of two overlapping intervals
+        /// </summary>
+        /// <param name="first">The first interval.</param>
+        /// <param name="second">The second interval.</param>
+        /// <typeparam name="T">The <see cref="IComparable"/> type of the interval.</typeparam>
+        /// <returns>An interval representing the union.</returns>
+        /// <remarks>
+        /// If the two intervals are not overlapping, an <see cref="EmptyInterval{T}"/> will be returned.
+        /// </remarks>
+        public static Interval<T> Union<T>(this Interval<T> first, Interval<T> second) where T : IComparable {
+            if (first.IsEmpty()) {
+                return second;
+            }
+
+            if (second.IsEmpty()) {
+                return first;
+            }
+
+            if (UncheckedIntersection(first, second).IsEmpty()) {
+                return Interval<T>.Empty();
+            }
             
+            var lowerBound = LowerMin(first.LowerBound, second.LowerBound);
+            var upperBound = UpperMax(first.UpperBound, second.UpperBound);
+            return Interval<T>.FromBounds(lowerBound, upperBound);
+        }
+
+        private static Interval<T> UncheckedIntersection<T>(Interval<T> first, Interval<T> second) where T : IComparable {
             var lowerBound = LowerMax(first.LowerBound, second.LowerBound);
             var upperBound = UpperMin(first.UpperBound, second.UpperBound);
 

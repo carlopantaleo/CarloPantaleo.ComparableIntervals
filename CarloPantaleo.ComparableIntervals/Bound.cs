@@ -191,9 +191,9 @@ namespace CarloPantaleo.ComparableIntervals {
                 case BoundType.Open:
                     return $"({_value})";
                 case BoundType.NegativeInfinite:
-                    return "-Inf";
+                    return "-∞";
                 case BoundType.PositiveInfinite:
-                    return "+Inf";
+                    return "∞";
                 default:
                     return base.ToString();
             }
