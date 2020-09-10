@@ -17,6 +17,12 @@ namespace CarloPantaleo.ComparableIntervals.Tests {
             var actual = first.Union(second);
             Verify(expected, actual);
         }
+        
+        [Theory]
+        [MemberData(nameof(InvalidBoundsData))]
+        public void InvalidBounds(Bound<int> lower, Bound<int> upper) {
+            Assert.Throws<ArgumentException>(() => Interval<int>.FromBounds(lower, upper));
+        }
 
         private static void Verify<T>(Interval<T> expected, Interval<T> actual) where T : IComparable {
             if (!expected.IsEmpty() && !actual.IsEmpty() && (expected.UpperBound.Type == BoundType.NegativeInfinite ||
@@ -93,5 +99,13 @@ namespace CarloPantaleo.ComparableIntervals.Tests {
                 new object[] {Interval<int>.Closed(1, 5), Interval<int>.FromBounds(Bound<int>.NegativeInfinite(), Bound<int>.PositiveInfinite()), Interval<int>.FromBounds(Bound<int>.NegativeInfinite(), Bound<int>.PositiveInfinite())},
                 new object[] {Interval<int>.FromBounds(Bound<int>.NegativeInfinite(), Bound<int>.PositiveInfinite()), Interval<int>.FromBounds(Bound<int>.NegativeInfinite(), Bound<int>.PositiveInfinite()), Interval<int>.FromBounds(Bound<int>.NegativeInfinite(), Bound<int>.PositiveInfinite())},
             };
+
+        public static IEnumerable<object[]> InvalidBoundsData =>
+            new List<object[]> {
+                new object[] {Bound<int>.PositiveInfinite(), Bound<int>.Closed(0)},
+                new object[] {Bound<int>.Closed(0), Bound<int>.NegativeInfinite()},
+                new object[] {Bound<int>.Closed(1), Bound<int>.Open(-1)},
+            };
+
     }
 }

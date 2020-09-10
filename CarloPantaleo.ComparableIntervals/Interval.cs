@@ -62,7 +62,6 @@ namespace CarloPantaleo.ComparableIntervals {
         }
 
         public static Interval<T> FromBounds(Bound<T> lowerBound, Bound<T> upperBound) {
-            CheckBounds(lowerBound, upperBound);
             return lowerBound == upperBound && (lowerBound.Type == BoundType.Open || upperBound.Type == BoundType.Open)
                 ? new EmptyInterval<T>()
                 : new Interval<T>(lowerBound, upperBound);
@@ -102,9 +101,8 @@ namespace CarloPantaleo.ComparableIntervals {
                 throw new ArgumentException("Upper bound cannot be negative infinite.");
             }
 
-            if (lowerBound.Type != BoundType.Open && upperBound.Type != BoundType.Open && lowerBound != upperBound &&
-                (lowerBound.Type != BoundType.NegativeInfinite && (T) lowerBound > upperBound ||
-                 upperBound.Type != BoundType.PositiveInfinite && lowerBound > (T) upperBound)) {
+            if (lowerBound.Type != BoundType.NegativeInfinite && (T) lowerBound > upperBound ||
+                upperBound.Type != BoundType.PositiveInfinite && lowerBound > (T) upperBound) {
                 throw new ArgumentException("Lower bound must be <= upper bound.");
             }
         }
