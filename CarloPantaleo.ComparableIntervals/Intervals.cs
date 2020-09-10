@@ -8,12 +8,12 @@ namespace CarloPantaleo.ComparableIntervals {
     /// </summary>
     public static class Intervals {
         /// <summary>
-        /// Creates a collection of intervals without overlapping intervals by performing a union on the overlapping
+        /// Creates a list of intervals without overlapping intervals by performing a union on the overlapping
         /// intervals.
         /// </summary>
         /// <typeparam name="T">The <see cref="IComparable"/> type of the interval.</typeparam>
         /// <returns>The resulting simplified collection.</returns>
-        public static List<Interval<T>> Simplify<T>(ICollection<Interval<T>> intervals) where T : IComparable {
+        public static List<Interval<T>> Simplify<T>(IEnumerable<Interval<T>> intervals) where T : IComparable {
             var cleanIntervals = RemoveEmptyIntervals(intervals);
             var resultingIntervals = PerformSimplify(cleanIntervals);
             SortByLowerBound(resultingIntervals);
@@ -31,14 +31,16 @@ namespace CarloPantaleo.ComparableIntervals {
                     .SkipWhile(i =>
                         !ReferenceEquals(i, inspectedInterval)) // Skip intervals previous to the inspected one.
                     .Skip(1) // Skip one more interval (which is exactly the inspected one).
-                    .Where(i => !ignoredIntervals.Contains(i)); // Exclude already ignored intervals.
+                    .Where(i => 
+                        !ignoredIntervals.Any(ii =>
+                            ReferenceEquals(ii, i))); // Exclude already ignored intervals references (see note below).
                 foreach (var interval in intervalsToProcess) {
                     if (!resultingInterval.Intersection(interval).IsEmpty()) {
                         resultingInterval = resultingInterval.Union(interval);
                         ignoredIntervals.Add(interval);
                     }
                 }
-                
+
                 /*
                  * Here checking if ignoredIntervals contains resultingInterval is not enough. We have to check if the
                  * reference of resultingInterval is contained in ignoredIntervals, because resultingInterval may be a
@@ -52,6 +54,22 @@ namespace CarloPantaleo.ComparableIntervals {
             }
 
             return resultingIntervals;
+        }
+
+        /// <summary>
+        /// Creates a list of intervals which is the resulting union of the passed collections of intervals.
+        /// </summary>
+        /// <param name="collections">The collections of intervals.</param>
+        /// <typeparam name="T">The <see cref="IComparable"/> type of the interval.</typeparam>
+        /// <returns>The resulting union.</returns>
+        public static List<Interval<T>> Union<T>(params IEnumerable<Interval<T>>[] collections)
+            where T : IComparable {
+            var joinedList = new List<Interval<T>>();
+            foreach (var collection in collections) {
+                joinedList.AddRange(collection);
+            }
+
+            return Simplify(joinedList);
         }
 
         private static ICollection<Interval<T>> RemoveEmptyIntervals<T>(IEnumerable<Interval<T>> intervals)
