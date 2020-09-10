@@ -57,6 +57,7 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="BoundTest.cs" />
+        <Compile Include="IntervalsTest.cs" />
         <Compile Include="IntervalTest.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
