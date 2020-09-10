@@ -93,16 +93,16 @@ namespace CarloPantaleo.ComparableIntervals {
                 throw new ArgumentException("Bounds cannot be null.");
             }
 
-            if (lowerBound.Type == BoundType.PositiveInfinite) {
-                throw new ArgumentException("Lower bound cannot be positive infinite.");
+            if (lowerBound.Type == BoundType.PositiveInfinity) {
+                throw new ArgumentException("Lower bound cannot be positive infinity.");
             }
 
-            if (upperBound.Type == BoundType.NegativeInfinite) {
-                throw new ArgumentException("Upper bound cannot be negative infinite.");
+            if (upperBound.Type == BoundType.NegativeInfinity) {
+                throw new ArgumentException("Upper bound cannot be negative infinity.");
             }
 
-            if (lowerBound.Type != BoundType.NegativeInfinite && (T) lowerBound > upperBound ||
-                upperBound.Type != BoundType.PositiveInfinite && lowerBound > (T) upperBound) {
+            if (lowerBound.Type != BoundType.NegativeInfinity && (T) lowerBound > upperBound ||
+                upperBound.Type != BoundType.PositiveInfinity && lowerBound > (T) upperBound) {
                 throw new ArgumentException("Lower bound must be <= upper bound.");
             }
         }
@@ -152,9 +152,9 @@ namespace CarloPantaleo.ComparableIntervals {
 
             string GetVal(Bound<T> bound) {
                 switch (bound.Type) {
-                    case BoundType.NegativeInfinite:
+                    case BoundType.NegativeInfinity:
                         return "-∞";
-                    case BoundType.PositiveInfinite:
+                    case BoundType.PositiveInfinity:
                         return "∞";
                     default:
                         return ((T) bound).ToString();

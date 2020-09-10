@@ -78,10 +78,10 @@ namespace CarloPantaleo.ComparableIntervals.Tests {
                 new object[] {
                     new List<Interval<int>> {
                         Interval<int>.Closed(0, 1),
-                        Interval<int>.FromBounds(Bound<int>.NegativeInfinite(), Bound<int>.PositiveInfinite()), Interval<int>.Open(6, 7)
+                        Interval<int>.FromBounds(Bound<int>.NegativeInfinity(), Bound<int>.PositiveInfinity()), Interval<int>.Open(6, 7)
                     },
                     new List<Interval<int>> {
-                        Interval<int>.FromBounds(Bound<int>.NegativeInfinite(), Bound<int>.PositiveInfinite())
+                        Interval<int>.FromBounds(Bound<int>.NegativeInfinity(), Bound<int>.PositiveInfinity())
                     }
                 },
             };

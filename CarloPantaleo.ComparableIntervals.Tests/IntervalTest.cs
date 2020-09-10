@@ -25,11 +25,11 @@ namespace CarloPantaleo.ComparableIntervals.Tests {
         }
 
         private static void Verify<T>(Interval<T> expected, Interval<T> actual) where T : IComparable {
-            if (!expected.IsEmpty() && !actual.IsEmpty() && (expected.UpperBound.Type == BoundType.NegativeInfinite ||
-                                                             expected.UpperBound.Type == BoundType.PositiveInfinite ||
-                                                             expected.LowerBound.Type == BoundType.NegativeInfinite ||
-                                                             expected.LowerBound.Type == BoundType.PositiveInfinite)) {
-                // Cannot compare infinite bounds: for the test, comparing the string representation is enough.
+            if (!expected.IsEmpty() && !actual.IsEmpty() && (expected.UpperBound.Type == BoundType.NegativeInfinity ||
+                                                             expected.UpperBound.Type == BoundType.PositiveInfinity ||
+                                                             expected.LowerBound.Type == BoundType.NegativeInfinity ||
+                                                             expected.LowerBound.Type == BoundType.PositiveInfinity)) {
+                // Cannot compare infinity bounds: for the test, comparing the string representation is enough.
                 Assert.Equal(expected.ToString(), actual.ToString());
             } else {
                 Assert.Equal(expected, actual);
@@ -67,8 +67,8 @@ namespace CarloPantaleo.ComparableIntervals.Tests {
                 new object[] {Interval<int>.Open(1, 5), Interval<int>.Open(1, 5), Interval<int>.Open(1, 5)},
                 new object[] {Interval<int>.Open(1, 5), Interval<int>.Empty(), Interval<int>.Empty()},
                 new object[] {Interval<int>.Empty(), Interval<int>.Open(1, 5), Interval<int>.Empty()},
-                new object[] {Interval<int>.Closed(1, 5), Interval<int>.FromBounds(Bound<int>.NegativeInfinite(), Bound<int>.PositiveInfinite()), Interval<int>.Closed(1, 5)},
-                new object[] {Interval<int>.FromBounds(Bound<int>.NegativeInfinite(), Bound<int>.PositiveInfinite()), Interval<int>.FromBounds(Bound<int>.NegativeInfinite(), Bound<int>.PositiveInfinite()), Interval<int>.FromBounds(Bound<int>.NegativeInfinite(), Bound<int>.PositiveInfinite())},
+                new object[] {Interval<int>.Closed(1, 5), Interval<int>.FromBounds(Bound<int>.NegativeInfinity(), Bound<int>.PositiveInfinity()), Interval<int>.Closed(1, 5)},
+                new object[] {Interval<int>.FromBounds(Bound<int>.NegativeInfinity(), Bound<int>.PositiveInfinity()), Interval<int>.FromBounds(Bound<int>.NegativeInfinity(), Bound<int>.PositiveInfinity()), Interval<int>.FromBounds(Bound<int>.NegativeInfinity(), Bound<int>.PositiveInfinity())},
             };
 
         public static IEnumerable<object[]> UnionData =>
@@ -96,14 +96,14 @@ namespace CarloPantaleo.ComparableIntervals.Tests {
                 new object[] {Interval<int>.Empty(), Interval<int>.Open(5, 7), Interval<int>.Open(5, 7)},
                 new object[] {Interval<int>.Closed(1, 3), Interval<int>.Empty(), Interval<int>.Closed(1, 3)},
                 new object[] {Interval<int>.Empty(), Interval<int>.Empty(), Interval<int>.Empty()},
-                new object[] {Interval<int>.Closed(1, 5), Interval<int>.FromBounds(Bound<int>.NegativeInfinite(), Bound<int>.PositiveInfinite()), Interval<int>.FromBounds(Bound<int>.NegativeInfinite(), Bound<int>.PositiveInfinite())},
-                new object[] {Interval<int>.FromBounds(Bound<int>.NegativeInfinite(), Bound<int>.PositiveInfinite()), Interval<int>.FromBounds(Bound<int>.NegativeInfinite(), Bound<int>.PositiveInfinite()), Interval<int>.FromBounds(Bound<int>.NegativeInfinite(), Bound<int>.PositiveInfinite())},
+                new object[] {Interval<int>.Closed(1, 5), Interval<int>.FromBounds(Bound<int>.NegativeInfinity(), Bound<int>.PositiveInfinity()), Interval<int>.FromBounds(Bound<int>.NegativeInfinity(), Bound<int>.PositiveInfinity())},
+                new object[] {Interval<int>.FromBounds(Bound<int>.NegativeInfinity(), Bound<int>.PositiveInfinity()), Interval<int>.FromBounds(Bound<int>.NegativeInfinity(), Bound<int>.PositiveInfinity()), Interval<int>.FromBounds(Bound<int>.NegativeInfinity(), Bound<int>.PositiveInfinity())},
             };
 
         public static IEnumerable<object[]> InvalidBoundsData =>
             new List<object[]> {
-                new object[] {Bound<int>.PositiveInfinite(), Bound<int>.Closed(0)},
-                new object[] {Bound<int>.Closed(0), Bound<int>.NegativeInfinite()},
+                new object[] {Bound<int>.PositiveInfinity(), Bound<int>.Closed(0)},
+                new object[] {Bound<int>.Closed(0), Bound<int>.NegativeInfinity()},
                 new object[] {Bound<int>.Closed(1), Bound<int>.Open(-1)},
             };
 
