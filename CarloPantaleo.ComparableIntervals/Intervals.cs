@@ -31,7 +31,7 @@ namespace CarloPantaleo.ComparableIntervals {
                     .SkipWhile(i =>
                         !ReferenceEquals(i, inspectedInterval)) // Skip intervals previous to the inspected one.
                     .Skip(1) // Skip one more interval (which is exactly the inspected one).
-                    .Where(i => 
+                    .Where(i =>
                         !ignoredIntervals.Any(ii =>
                             ReferenceEquals(ii, i))); // Exclude already ignored intervals references (see note below).
                 foreach (var interval in intervalsToProcess) {
@@ -76,6 +76,45 @@ namespace CarloPantaleo.ComparableIntervals {
             }
 
             return Flatten(joinedList);
+        }
+
+        /// <summary>
+        /// Creates a list of intervals which is the intersection of the passed collections of intervals.
+        /// </summary>
+        /// <param name="collections">
+        /// The collections of intervals to intersect. Since each collection should not have overlapping intervals, a
+        /// flattening (see <see cref="Flatten{T}"/> will be performed on each collection before processing.
+        /// </param>
+        /// <typeparam name="T">The <see cref="IComparable"/> type of the interval.</typeparam>
+        /// <returns>The resulting intersection.</returns>
+        public static List<Interval<T>> Intersection<T>(params ICollection<Interval<T>>[] collections)
+            where T : IComparable {
+            if (collections == null || collections.Length == 0) {
+                return new List<Interval<T>>();
+            }
+
+            if (collections.Length == 1) {
+                return Flatten(collections[0]);
+            }
+
+            return collections.Aggregate(PerformIntersection) as List<Interval<T>>;
+        }
+
+        private static List<Interval<T>> PerformIntersection<T>(IEnumerable<Interval<T>> first,
+                                                                ICollection<Interval<T>> second) where T : IComparable {
+            var resultingIntervals = new List<Interval<T>>();
+
+            // This brute force approach is not the most efficient, but I won't prematurely optimise it unless needed.
+            foreach (var inspectedInterval in first) {
+                foreach (var interval in second) {
+                    var intersection = inspectedInterval.Intersection(interval);
+                    if (!intersection.IsEmpty()) {
+                        resultingIntervals.Add(intersection);
+                    }
+                }
+            }
+
+            return Flatten(resultingIntervals);
         }
     }
 }

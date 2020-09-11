@@ -12,14 +12,23 @@ namespace CarloPantaleo.ComparableIntervals.Tests {
             // not comparable.
             Assert.Equal(expectedOutput.Select(i => i.ToString()), output.Select(i => i.ToString()));
         }
-        
+
         [Theory]
         [MemberData(nameof(UnionData))]
-        public void Union(List<Interval<int>> first,List<Interval<int>> second, List<Interval<int>> expectedOutput) {
+        public void Union(List<Interval<int>> first, List<Interval<int>> second, List<Interval<int>> expectedOutput) {
             var output = Intervals.Union(first, second);
             // Comparison is done on the string representation of intervals in order to handle infinity cases which are
             // not comparable.
             Assert.Equal(expectedOutput.Select(i => i.ToString()), output.Select(i => i.ToString()));
+        }
+
+        [Theory]
+        [MemberData(nameof(IntersectionData))]
+        public void Intersection(List<Interval<int>> expected, params ICollection<Interval<int>>[] input) {
+            var output = Intervals.Intersection(input);
+            // Comparison is done on the string representation of intervals in order to handle infinity cases which are
+            // not comparable.
+            Assert.Equal(expected.Select(i => i.ToString()), output.Select(i => i.ToString()));
         }
 
         public static IEnumerable<object[]> FlattenData =>
@@ -192,6 +201,46 @@ namespace CarloPantaleo.ComparableIntervals.Tests {
                     new List<Interval<int>> {
                         Interval<int>.FromBounds(Bound<int>.NegativeInfinity(), Bound<int>.PositiveInfinity())
                     }
+                },
+            };
+
+        public static IEnumerable<object[]> IntersectionData =>
+            new List<object[]> {
+                new object[] {new List<Interval<int>>(), null,},
+                new object[] {new List<Interval<int>>(), new List<Interval<int>>(),},
+                new object[] {new List<Interval<int>>(), new List<Interval<int>> {Interval<int>.Empty()},},
+                new object[] {
+                    new List<Interval<int>> {Interval<int>.Closed(2, 4)},
+                    new List<Interval<int>> {Interval<int>.Closed(2, 3), Interval<int>.Closed(3, 4)},
+                },
+                new object[] {
+                    new List<Interval<int>> {Interval<int>.Closed(2, 4)},
+                    new List<Interval<int>> {Interval<int>.Closed(1, 4)},
+                    new List<Interval<int>> {Interval<int>.Closed(2, 5)},
+                },
+                new object[] {
+                    new List<Interval<int>> {Interval<int>.Closed(2, 4)},
+                    new List<Interval<int>> {Interval<int>.Closed(1, 4)},
+                    new List<Interval<int>> {Interval<int>.Closed(-5, -1), Interval<int>.Closed(2, 5)},
+                },
+                new object[] {
+                    new List<Interval<int>> {Interval<int>.Closed(1, 2), Interval<int>.Closed(3, 4)},
+                    new List<Interval<int>> {Interval<int>.Closed(1, 3), Interval<int>.Closed(2, 4)},
+                    new List<Interval<int>> {Interval<int>.Closed(1, 2), Interval<int>.Closed(3, 4)},
+                },
+                new object[] {
+                    new List<Interval<int>> {Interval<int>.OpenClosed(-5, 0), Interval<int>.ClosedOpen(10, 15)},
+                    new List<Interval<int>> {
+                        Interval<int>.FromBounds(Bound<int>.NegativeInfinity(), Bound<int>.Closed(0)),
+                        Interval<int>.FromBounds(Bound<int>.Closed(10), Bound<int>.PositiveInfinity())
+                    },
+                    new List<Interval<int>> {Interval<int>.Open(-5, 15)},
+                },
+                new object[] {
+                    new List<Interval<int>> {Interval<int>.Closed(5, 6)},
+                    new List<Interval<int>> {Interval<int>.Closed(1, 10)},
+                    new List<Interval<int>> {Interval<int>.ClosedOpen(5, 10), Interval<int>.Open(15, 20)},
+                    new List<Interval<int>> {Interval<int>.Closed(0, 6)},
                 },
             };
     }
