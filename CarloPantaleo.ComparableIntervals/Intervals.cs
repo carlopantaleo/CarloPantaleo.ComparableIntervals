@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static CarloPantaleo.ComparableIntervals.BoundType;
 
 namespace CarloPantaleo.ComparableIntervals {
     /// <summary>
@@ -78,7 +79,7 @@ namespace CarloPantaleo.ComparableIntervals {
             if (collections == null || collections.Length == 0) {
                 return new List<Interval<T>>();
             }
-            
+
             var joinedList = new List<Interval<T>>();
             foreach (var collection in collections) {
                 joinedList.AddRange(collection);
@@ -124,6 +125,63 @@ namespace CarloPantaleo.ComparableIntervals {
             }
 
             return Flatten(resultingIntervals);
+        }
+
+        /// <summary>
+        /// Creates a list of intervals which is the complement of the passed collection of intervals.
+        /// </summary>
+        /// <param name="intervals">
+        /// The collection of intervals to complement. Since this collection should not have overlapping intervals, a
+        /// flattening (see <see cref="Flatten{T}"/> will be performed before processing.
+        /// </param>
+        /// <typeparam name="T">The <see cref="IComparable"/> type of the interval.</typeparam>
+        /// <returns>The resulting complement.</returns>
+        public static List<Interval<T>> Complement<T>(ICollection<Interval<T>> intervals) where T : IComparable {
+            var normalizedIntervals = Flatten(intervals);
+            if (normalizedIntervals.Count == 0) {
+                return SingleIntervalComplement(Interval<T>.Empty());
+            }
+
+            var complementedIntervals = normalizedIntervals
+                .Select(interval => SingleIntervalComplement(interval) as ICollection<Interval<T>>)
+                .ToArray();
+            return Intersection(complementedIntervals);
+        }
+
+        private static List<Interval<T>> SingleIntervalComplement<T>(Interval<T> interval) where T : IComparable {
+            if (interval.IsEmpty()) {
+                return new List<Interval<T>> {
+                    Interval<T>.FromBounds(Bound<T>.NegativeInfinity(), Bound<T>.PositiveInfinity())
+                };
+            }
+
+            if (interval.LowerBound.Type == NegativeInfinity) {
+                if (interval.UpperBound.Type == PositiveInfinity) {
+                    return new List<Interval<T>> {Interval<T>.Empty()};
+                }
+
+                return new List<Interval<T>> {UpperUnbounded()};
+            }
+
+            if (interval.UpperBound.Type == PositiveInfinity) {
+                return new List<Interval<T>> {LowerUnbounded()};
+            }
+            
+            return new List<Interval<T>> {LowerUnbounded(), UpperUnbounded()};
+
+            // Local functions
+            
+            Interval<T> UpperUnbounded() {
+                return Interval<T>.FromBounds(interval.UpperBound.Type == Open
+                    ? Bound<T>.Closed(interval.UpperBound)
+                    : Bound<T>.Open(interval.UpperBound), Bound<T>.PositiveInfinity());
+            }
+
+            Interval<T> LowerUnbounded() {
+                return Interval<T>.FromBounds(Bound<T>.NegativeInfinity(), interval.LowerBound.Type == Open
+                    ? Bound<T>.Closed(interval.LowerBound)
+                    : Bound<T>.Open(interval.LowerBound));
+            }
         }
     }
 }

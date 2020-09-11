@@ -31,6 +31,15 @@ namespace CarloPantaleo.ComparableIntervals.Tests {
             Assert.Equal(expected.Select(i => i.ToString()), output.Select(i => i.ToString()));
         }
 
+        [Theory]
+        [MemberData(nameof(ComplementData))]
+        public void Complement(List<Interval<int>> input, List<Interval<int>> expected) {
+            var output = Intervals.Complement(input);
+            // Comparison is done on the string representation of intervals in order to handle infinity cases which are
+            // not comparable.
+            Assert.Equal(expected.Select(i => i.ToString()), output.Select(i => i.ToString()));
+        }
+
         public static IEnumerable<object[]> FlattenData =>
             new List<object[]> {
                 new object[] {
@@ -241,6 +250,34 @@ namespace CarloPantaleo.ComparableIntervals.Tests {
                     new List<Interval<int>> {Interval<int>.Closed(1, 10)},
                     new List<Interval<int>> {Interval<int>.ClosedOpen(5, 10), Interval<int>.Open(15, 20)},
                     new List<Interval<int>> {Interval<int>.Closed(0, 6)},
+                },
+            };
+
+        public static IEnumerable<object[]> ComplementData =>
+            new List<object[]> {
+                new object[] {
+                    null, new List<Interval<int>> {
+                        Interval<int>.FromBounds(Bound<int>.NegativeInfinity(), Bound<int>.PositiveInfinity())
+                    },
+                },
+                new object[] {
+                    new List<Interval<int>>(), new List<Interval<int>> {
+                        Interval<int>.FromBounds(Bound<int>.NegativeInfinity(), Bound<int>.PositiveInfinity())
+                    },
+                },
+                new object[] {
+                    new List<Interval<int>> {Interval<int>.Empty()}, new List<Interval<int>> {
+                        Interval<int>.FromBounds(Bound<int>.NegativeInfinity(), Bound<int>.PositiveInfinity())
+                    },
+                },
+                new object[] {
+                    new List<Interval<int>> {
+                        Interval<int>.FromBounds(Bound<int>.NegativeInfinity(), Bound<int>.Closed(0)),
+                        Interval<int>.FromBounds(Bound<int>.Closed(10), Bound<int>.PositiveInfinity())
+                    },
+                    new List<Interval<int>> {
+                        Interval<int>.Open(0, 10)
+                    },
                 },
             };
     }
