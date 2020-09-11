@@ -5,9 +5,9 @@ using Xunit;
 namespace CarloPantaleo.ComparableIntervals.Tests {
     public class IntervalsTest {
         [Theory]
-        [MemberData(nameof(SimplifyData))]
-        public void Simplify(List<Interval<int>> input, List<Interval<int>> expectedOutput) {
-            var output = Intervals.Simplify(input);
+        [MemberData(nameof(FlattenData))]
+        public void Flatten(List<Interval<int>> input, List<Interval<int>> expectedOutput) {
+            var output = Intervals.Flatten(input);
             // Comparison is done on the string representation of intervals in order to handle infinity cases which are
             // not comparable.
             Assert.Equal(expectedOutput.Select(i => i.ToString()), output.Select(i => i.ToString()));
@@ -22,7 +22,7 @@ namespace CarloPantaleo.ComparableIntervals.Tests {
             Assert.Equal(expectedOutput.Select(i => i.ToString()), output.Select(i => i.ToString()));
         }
 
-        public static IEnumerable<object[]> SimplifyData =>
+        public static IEnumerable<object[]> FlattenData =>
             new List<object[]> {
                 new object[] {
                     new List<Interval<int>> {

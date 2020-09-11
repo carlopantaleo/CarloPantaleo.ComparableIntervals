@@ -12,16 +12,16 @@ namespace CarloPantaleo.ComparableIntervals {
         /// intervals.
         /// </summary>
         /// <typeparam name="T">The <see cref="IComparable"/> type of the interval.</typeparam>
-        /// <returns>The resulting simplified collection.</returns>
-        public static List<Interval<T>> Simplify<T>(IEnumerable<Interval<T>> intervals) where T : IComparable {
+        /// <returns>The resulting flattened collection.</returns>
+        public static List<Interval<T>> Flatten<T>(IEnumerable<Interval<T>> intervals) where T : IComparable {
             var cleanIntervals = RemoveEmptyIntervals(intervals);
-            var resultingIntervals = PerformSimplify(cleanIntervals);
+            var resultingIntervals = PerformFlatten(cleanIntervals);
             SortByLowerBound(resultingIntervals);
 
             return resultingIntervals;
         }
 
-        private static List<Interval<T>> PerformSimplify<T>(ICollection<Interval<T>> intervals) where T : IComparable {
+        private static List<Interval<T>> PerformFlatten<T>(ICollection<Interval<T>> intervals) where T : IComparable {
             var resultingIntervals = new List<Interval<T>>();
             var ignoredIntervals = new List<Interval<T>>(); // Intervals already unified with others.
 
@@ -69,7 +69,7 @@ namespace CarloPantaleo.ComparableIntervals {
                 joinedList.AddRange(collection);
             }
 
-            return Simplify(joinedList);
+            return Flatten(joinedList);
         }
 
         private static ICollection<Interval<T>> RemoveEmptyIntervals<T>(IEnumerable<Interval<T>> intervals)
