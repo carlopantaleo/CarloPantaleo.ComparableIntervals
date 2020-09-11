@@ -11,9 +11,14 @@ namespace CarloPantaleo.ComparableIntervals {
         /// Creates a list of intervals without overlapping intervals by performing a union on the overlapping
         /// intervals.
         /// </summary>
+        /// <param name="intervals">The collection of intervals to flatten.</param>
         /// <typeparam name="T">The <see cref="IComparable"/> type of the interval.</typeparam>
         /// <returns>The resulting flattened collection.</returns>
-        public static List<Interval<T>> Flatten<T>(IEnumerable<Interval<T>> intervals) where T : IComparable {
+        public static List<Interval<T>> Flatten<T>(ICollection<Interval<T>> intervals) where T : IComparable {
+            if (intervals == null || !intervals.Any()) {
+                return new List<Interval<T>>();
+            }
+
             var cleanIntervals = RemoveEmptyIntervals(intervals);
             var resultingIntervals = PerformFlatten(cleanIntervals);
             SortByLowerBound(resultingIntervals);
@@ -70,6 +75,10 @@ namespace CarloPantaleo.ComparableIntervals {
         /// <returns>The resulting union.</returns>
         public static List<Interval<T>> Union<T>(params IEnumerable<Interval<T>>[] collections)
             where T : IComparable {
+            if (collections == null || collections.Length == 0) {
+                return new List<Interval<T>>();
+            }
+            
             var joinedList = new List<Interval<T>>();
             foreach (var collection in collections) {
                 joinedList.AddRange(collection);
