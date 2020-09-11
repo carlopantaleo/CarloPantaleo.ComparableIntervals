@@ -56,6 +56,12 @@ namespace CarloPantaleo.ComparableIntervals {
             return resultingIntervals;
         }
 
+        private static ICollection<Interval<T>> RemoveEmptyIntervals<T>(IEnumerable<Interval<T>> intervals)
+            where T : IComparable => intervals.Where(i => !i.IsEmpty()).ToList();
+
+        private static void SortByLowerBound<T>(List<Interval<T>> intervals) where T : IComparable =>
+            intervals.Sort((i, j) => i.LowerBound < j.LowerBound ? -1 : 1);
+
         /// <summary>
         /// Creates a list of intervals which is the resulting union of the passed collections of intervals.
         /// </summary>
@@ -71,11 +77,5 @@ namespace CarloPantaleo.ComparableIntervals {
 
             return Flatten(joinedList);
         }
-
-        private static ICollection<Interval<T>> RemoveEmptyIntervals<T>(IEnumerable<Interval<T>> intervals)
-            where T : IComparable => intervals.Where(i => !i.IsEmpty()).ToList();
-
-        private static void SortByLowerBound<T>(List<Interval<T>> intervals) where T : IComparable =>
-            intervals.Sort((i, j) => i.LowerBound < j.LowerBound ? -1 : 1);
     }
 }
