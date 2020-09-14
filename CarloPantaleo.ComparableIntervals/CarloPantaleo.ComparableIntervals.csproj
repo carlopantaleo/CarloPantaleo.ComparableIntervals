@@ -6,4 +6,8 @@
     <Version>1.1.0</Version>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>D:\Projects\Microsoft\StandAlone\CarloPantaleo.ComparableIntervals\CarloPantaleo.ComparableIntervals\CarloPantaleo.ComparableIntervals.xml</DocumentationFile>
+  </PropertyGroup>
+
 </Project>
