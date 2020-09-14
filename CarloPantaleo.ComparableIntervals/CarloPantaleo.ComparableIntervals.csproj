@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.0</TargetFramework>
+    <Description>A library which helps doing common operations, such as union, intersection or complement, on intervals of IComparable types.</Description>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
 </Project>
