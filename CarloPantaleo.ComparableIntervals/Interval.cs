@@ -1,5 +1,4 @@
 ﻿using System;
-using JetBrains.Annotations;
 
 namespace CarloPantaleo.ComparableIntervals {
     public class Interval<T> where T : IComparable {
@@ -87,7 +86,6 @@ namespace CarloPantaleo.ComparableIntervals {
             return new EmptyInterval<T>();
         }
 
-        [UsedImplicitly]
         private static void CheckBounds(Bound<T> lowerBound, Bound<T> upperBound) {
             if (lowerBound == null || upperBound == null) {
                 throw new ArgumentException("Bounds cannot be null.");
