@@ -279,6 +279,28 @@ namespace CarloPantaleo.ComparableIntervals.Tests {
                         Interval<int>.Open(0, 10)
                     },
                 },
+                new object[] {
+                    new List<Interval<int>> {Interval<int>.Closed(0, 10)},
+                    new List<Interval<int>> {
+                        Interval<int>.FromBounds(Bound<int>.NegativeInfinity(), Bound<int>.Open(0)),
+                        Interval<int>.FromBounds(Bound<int>.Open(10), Bound<int>.PositiveInfinity()),
+                    },
+                },
+                new object[] {
+                    new List<Interval<int>> {Interval<int>.ClosedOpen(0, 10), Interval<int>.OpenClosed(5, 20)},
+                    new List<Interval<int>> {
+                        Interval<int>.FromBounds(Bound<int>.NegativeInfinity(), Bound<int>.Open(0)),
+                        Interval<int>.FromBounds(Bound<int>.Open(20), Bound<int>.PositiveInfinity()),
+                    },
+                },
+                new object[] {
+                    new List<Interval<int>> {Interval<int>.Open(0, 10), Interval<int>.Closed(20, 30)},
+                    new List<Interval<int>> {
+                        Interval<int>.FromBounds(Bound<int>.NegativeInfinity(), Bound<int>.Closed(0)),
+                        Interval<int>.ClosedOpen(10, 20),
+                        Interval<int>.FromBounds(Bound<int>.Open(30), Bound<int>.PositiveInfinity()),
+                    },
+                },
             };
     }
 }
