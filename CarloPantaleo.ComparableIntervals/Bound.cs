@@ -22,10 +22,10 @@ namespace CarloPantaleo.ComparableIntervals {
     /// </remarks>
     public readonly struct Bound<T> where T : IComparable {
         private readonly T _value;
-        public BoundType Type { get; }
+        private readonly BoundType _type;
 
         private Bound(BoundType type, T value = default) {
-            Type = type;
+            _type = type;
             _value = value;
         }
 
@@ -74,12 +74,32 @@ namespace CarloPantaleo.ComparableIntervals {
         }
 
         /// <summary>
+        /// Returns true if the bound is open.
+        /// </summary>
+        public bool IsOpen() => _type == BoundType.Open;
+        
+        /// <summary>
+        /// Returns true if the bound is closed.
+        /// </summary>
+        public bool IsClosed() => _type == BoundType.Closed;
+        
+        /// <summary>
+        /// Returns true if the bound is positive infinity.
+        /// </summary>
+        public bool IsPositiveInfinity() => _type == BoundType.PositiveInfinity;
+        
+        /// <summary>
+        /// Returns true if the bound is negative infinity.
+        /// </summary>
+        public bool IsNegativeInfinity() => _type == BoundType.NegativeInfinity;
+
+        /// <summary>
         /// Gets the boundary value. 
         /// </summary>
         /// <param name="bound">The bound to get the boundary value of.</param>
         /// <exception cref="InvalidCastException">If the bound is not finite.</exception>
         public static implicit operator T(Bound<T> bound) {
-            if (bound.Type == BoundType.NegativeInfinity || bound.Type == BoundType.PositiveInfinity) {
+            if (bound._type == BoundType.NegativeInfinity || bound._type == BoundType.PositiveInfinity) {
                 throw new InvalidCastException("Cannot cast a bound which tends to infinity.");
             }
 
@@ -104,22 +124,22 @@ namespace CarloPantaleo.ComparableIntervals {
 
         public static bool operator <(Bound<T> left, Bound<T> right) =>
             (Compare(left, right) ??
-             (left.Type == BoundType.PositiveInfinity || left.Type == BoundType.NegativeInfinity ? 1 : -1)) < 0;
+             (left._type == BoundType.PositiveInfinity || left._type == BoundType.NegativeInfinity ? 1 : -1)) < 0;
 
         public static bool operator <=(Bound<T> left, Bound<T> right) => 
             (Compare(left, right) ?? 
-             (left.Type == BoundType.PositiveInfinity || left.Type == BoundType.NegativeInfinity ? 1 : -1)) <= 0;
+             (left._type == BoundType.PositiveInfinity || left._type == BoundType.NegativeInfinity ? 1 : -1)) <= 0;
 
         public static bool operator >(Bound<T> left, Bound<T> right) => 
             (Compare(left, right) ?? 
-             (left.Type == BoundType.PositiveInfinity || left.Type == BoundType.NegativeInfinity ? -1 : 1)) > 0;
+             (left._type == BoundType.PositiveInfinity || left._type == BoundType.NegativeInfinity ? -1 : 1)) > 0;
 
         public static bool operator >=(Bound<T> left, Bound<T> right) => 
             (Compare(left, right) ?? 
-             (left.Type == BoundType.PositiveInfinity || left.Type == BoundType.NegativeInfinity ? -1 : 1)) >= 0;
+             (left._type == BoundType.PositiveInfinity || left._type == BoundType.NegativeInfinity ? -1 : 1)) >= 0;
 
         private static int? Compare(T left, Bound<T> right) {
-            switch (right.Type) {
+            switch (right._type) {
                 case BoundType.NegativeInfinity:
                     return 1;
                 case BoundType.PositiveInfinity:
@@ -134,21 +154,21 @@ namespace CarloPantaleo.ComparableIntervals {
         }
 
         private static int? Compare(Bound<T> left, Bound<T> right) {
-            if (left.Type == right.Type &&
-                (left.Type == BoundType.NegativeInfinity || left.Type == BoundType.PositiveInfinity)) {
+            if (left._type == right._type &&
+                (left._type == BoundType.NegativeInfinity || left._type == BoundType.PositiveInfinity)) {
                 return null;
             }
 
-            if (left.Type == BoundType.NegativeInfinity || right.Type == BoundType.PositiveInfinity) {
+            if (left._type == BoundType.NegativeInfinity || right._type == BoundType.PositiveInfinity) {
                 return -1;
             }
 
-            if (left.Type == BoundType.PositiveInfinity || right.Type == BoundType.NegativeInfinity) {
+            if (left._type == BoundType.PositiveInfinity || right._type == BoundType.NegativeInfinity) {
                 return 1;
             }
 
             if (EqualityComparer<T>.Default.Equals(left._value, right._value)) {
-                return left.Type == right.Type ? (int?) 0 : null;
+                return left._type == right._type ? (int?) 0 : null;
             }
 
             return left._value.CompareTo(right._value);
@@ -161,9 +181,9 @@ namespace CarloPantaleo.ComparableIntervals {
         /// <param name="other"></param>
         /// <returns></returns>
         public bool Equals(Bound<T> other) {
-            return Type != BoundType.PositiveInfinity &&
-                   Type != BoundType.NegativeInfinity &&
-                   EqualityComparer<T>.Default.Equals(_value, other._value) && Type == other.Type;
+            return _type != BoundType.PositiveInfinity &&
+                   _type != BoundType.NegativeInfinity &&
+                   EqualityComparer<T>.Default.Equals(_value, other._value) && _type == other._type;
         }
 
         public override bool Equals(object obj) {
@@ -172,7 +192,7 @@ namespace CarloPantaleo.ComparableIntervals {
 
         public override int GetHashCode() {
             unchecked {
-                return (EqualityComparer<T>.Default.GetHashCode(_value) * 397) ^ (int) Type;
+                return (EqualityComparer<T>.Default.GetHashCode(_value) * 397) ^ (int) _type;
             }
         }
 
@@ -185,7 +205,7 @@ namespace CarloPantaleo.ComparableIntervals {
         }
 
         public override string ToString() {
-            switch (Type) {
+            switch (_type) {
                 case BoundType.Closed:
                     return $"[{_value}]";
                 case BoundType.Open:
@@ -198,32 +218,32 @@ namespace CarloPantaleo.ComparableIntervals {
                     return base.ToString();
             }
         }
-    }
-
-    /// <summary>
-    /// Represents the bound type.
-    /// </summary>
-    public enum BoundType {
+        
         /// <summary>
-        /// A closed bound.
+        /// Represents the bound type.
         /// </summary>
-        Closed,
+        private enum BoundType {
+            /// <summary>
+            /// A closed bound.
+            /// </summary>
+            Closed,
 
-        /// <summary>
-        /// An open bound.
-        /// </summary>
-        Open,
+            /// <summary>
+            /// An open bound.
+            /// </summary>
+            Open,
 
-        /// <summary>
-        /// A bound representing the negative infinity. It is always less than any other non-Negativeinfinity
-        /// bound.
-        /// </summary>
-        NegativeInfinity,
+            /// <summary>
+            /// A bound representing the negative infinity. It is always less than any other non-Negativeinfinity
+            /// bound.
+            /// </summary>
+            NegativeInfinity,
 
-        /// <summary>
-        /// A bound representing the positive infinity. It is always greater than any other non-Positiveinfinity
-        /// bound.
-        /// </summary>
-        PositiveInfinity
+            /// <summary>
+            /// A bound representing the positive infinity. It is always greater than any other non-Positiveinfinity
+            /// bound.
+            /// </summary>
+            PositiveInfinity
+        }
     }
 }

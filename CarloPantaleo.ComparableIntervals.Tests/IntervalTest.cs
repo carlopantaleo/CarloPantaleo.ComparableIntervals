@@ -25,10 +25,10 @@ namespace CarloPantaleo.ComparableIntervals.Tests {
         }
 
         private static void Verify<T>(Interval<T> expected, Interval<T> actual) where T : IComparable {
-            if (!expected.IsEmpty() && !actual.IsEmpty() && (expected.UpperBound.Type == BoundType.NegativeInfinity ||
-                                                             expected.UpperBound.Type == BoundType.PositiveInfinity ||
-                                                             expected.LowerBound.Type == BoundType.NegativeInfinity ||
-                                                             expected.LowerBound.Type == BoundType.PositiveInfinity)) {
+            if (!expected.IsEmpty() && !actual.IsEmpty() && (expected.UpperBound.IsNegativeInfinity() ||
+                                                             expected.UpperBound.IsPositiveInfinity() ||
+                                                             expected.LowerBound.IsNegativeInfinity() ||
+                                                             expected.LowerBound.IsPositiveInfinity())) {
                 // Cannot compare infinity bounds: for the test, comparing the string representation is enough.
                 Assert.Equal(expected.ToString(), actual.ToString());
             } else {

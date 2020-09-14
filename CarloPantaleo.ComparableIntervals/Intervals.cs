@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static CarloPantaleo.ComparableIntervals.BoundType;
 
 namespace CarloPantaleo.ComparableIntervals {
     /// <summary>
@@ -155,15 +154,15 @@ namespace CarloPantaleo.ComparableIntervals {
                 };
             }
 
-            if (interval.LowerBound.Type == NegativeInfinity) {
-                if (interval.UpperBound.Type == PositiveInfinity) {
+            if (interval.LowerBound.IsNegativeInfinity()) {
+                if (interval.UpperBound.IsPositiveInfinity()) {
                     return new List<Interval<T>> {Interval<T>.Empty()};
                 }
 
                 return new List<Interval<T>> {UpperUnbounded()};
             }
 
-            if (interval.UpperBound.Type == PositiveInfinity) {
+            if (interval.UpperBound.IsPositiveInfinity()) {
                 return new List<Interval<T>> {LowerUnbounded()};
             }
             
@@ -172,13 +171,13 @@ namespace CarloPantaleo.ComparableIntervals {
             // Local functions
             
             Interval<T> UpperUnbounded() {
-                return Interval<T>.FromBounds(interval.UpperBound.Type == Open
+                return Interval<T>.FromBounds(interval.UpperBound.IsOpen()
                     ? Bound<T>.Closed(interval.UpperBound)
                     : Bound<T>.Open(interval.UpperBound), Bound<T>.PositiveInfinity());
             }
 
             Interval<T> LowerUnbounded() {
-                return Interval<T>.FromBounds(Bound<T>.NegativeInfinity(), interval.LowerBound.Type == Open
+                return Interval<T>.FromBounds(Bound<T>.NegativeInfinity(), interval.LowerBound.IsOpen()
                     ? Bound<T>.Closed(interval.LowerBound)
                     : Bound<T>.Open(interval.LowerBound));
             }
