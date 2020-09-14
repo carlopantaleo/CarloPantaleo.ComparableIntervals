@@ -4,10 +4,15 @@
     <TargetFramework>netstandard1.0</TargetFramework>
     <Description>A library which helps doing common operations, such as union, intersection or complement, on intervals of IComparable types.</Description>
     <Version>1.1.0</Version>
+    <Company />
+    <Authors>Carlo Pantaleo</Authors>
+    <RepositoryUrl>https://github.com/carlopantaleo/CarloPantaleo.ComparableIntervals</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>intervals ranges comparable union intersection complement</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>D:\Projects\Microsoft\StandAlone\CarloPantaleo.ComparableIntervals\CarloPantaleo.ComparableIntervals\CarloPantaleo.ComparableIntervals.xml</DocumentationFile>
+    <DocumentationFile>D:\Projects\Microsoft\StandAlone\CarloPantaleo.ComparableIntervals\CarloPantaleo.ComparableIntervals\obj\CarloPantaleo.ComparableIntervals.xml</DocumentationFile>
   </PropertyGroup>
 
 </Project>
