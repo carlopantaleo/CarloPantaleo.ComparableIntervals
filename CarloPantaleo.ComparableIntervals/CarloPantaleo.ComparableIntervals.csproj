@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.0</TargetFramework>
     <Description>A library which helps doing common operations, such as union, intersection or complement, on intervals of IComparable types.</Description>
     <Version>1.1.0</Version>
     <Company />
@@ -9,6 +8,8 @@
     <RepositoryUrl>https://github.com/carlopantaleo/CarloPantaleo.ComparableIntervals</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>intervals ranges comparable union intersection complement</PackageTags>
+    <TargetFrameworks>net40;net45;net451;net452;net46;net461;net472;netstandard2.0</TargetFrameworks>
+    <PackageVersion>1.2.0</PackageVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
