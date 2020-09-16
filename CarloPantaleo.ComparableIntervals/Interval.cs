@@ -1,8 +1,19 @@
 ﻿using System;
 
 namespace CarloPantaleo.ComparableIntervals {
+    /// <summary>
+    /// Represents an interval of type <see cref="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the interval.</typeparam>
     public class Interval<T> where T : IComparable {
+        /// <summary>
+        /// The upper bound of the interval.
+        /// </summary>
         public virtual Bound<T> UpperBound { get; }
+        
+        /// <summary>
+        /// The lower bound of the interval.
+        /// </summary>
         public virtual Bound<T> LowerBound { get; }
 
         #region Constructors
@@ -60,6 +71,12 @@ namespace CarloPantaleo.ComparableIntervals {
             return FromBounds(Bound<T>.Closed(lowerBound), Bound<T>.Open(upperBound));
         }
 
+        /// <summary>
+        /// Creates an interval given its bounds.
+        /// </summary>
+        /// <param name="lowerBound">The lower bound.</param>
+        /// <param name="upperBound">The upper bound.</param>
+        /// <returns>The newly created interval.</returns>
         public static Interval<T> FromBounds(Bound<T> lowerBound, Bound<T> upperBound) {
             return lowerBound == upperBound && (lowerBound.IsOpen() || upperBound.IsOpen())
                 ? new EmptyInterval<T>()
@@ -109,7 +126,7 @@ namespace CarloPantaleo.ComparableIntervals {
 
         #region Equality Operators
 
-        protected bool Equals(Interval<T> other) {
+        private bool Equals(Interval<T> other) {
             if (other is EmptyInterval<T>) {
                 return this is EmptyInterval<T>;
             }
@@ -117,22 +134,30 @@ namespace CarloPantaleo.ComparableIntervals {
             return UpperBound.Equals(other.UpperBound) && LowerBound.Equals(other.LowerBound);
         }
 
+        ///<inheritdoc/>
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             return obj.GetType() == GetType() && Equals((Interval<T>) obj);
         }
 
+        ///<inheritdoc/>
         public override int GetHashCode() {
             unchecked {
                 return (UpperBound.GetHashCode() * 397) ^ LowerBound.GetHashCode();
             }
         }
 
+        /// <summary>
+        /// Checks if two intervals are equal.
+        /// </summary>
         public static bool operator ==(Interval<T> left, Interval<T> right) {
             return Equals(left, right);
         }
 
+        /// <summary>
+        /// Checks if two intervals are not equal.
+        /// </summary>
         public static bool operator !=(Interval<T> left, Interval<T> right) {
             return !Equals(left, right);
         }
@@ -144,6 +169,7 @@ namespace CarloPantaleo.ComparableIntervals {
         /// </summary>
         public virtual bool IsEmpty() => false;
 
+        ///<inheritdoc/>
         public override string ToString() {
             return $"{(LowerBound.IsClosed() ? "[" : "(")}{GetVal(LowerBound)}, " +
                    $"{GetVal(UpperBound)}{(UpperBound.IsClosed() ? "]" : ")")}";
@@ -252,17 +278,31 @@ namespace CarloPantaleo.ComparableIntervals {
         }
     }
 
+    /// <summary>
+    /// Represents an empty interval.
+    /// </summary>
+    /// <typeparam name="T">The type of the empty interval.</typeparam>
     public class EmptyInterval<T> : Interval<T> where T : IComparable {
+        /// <summary>
+        /// The upper bound. Calling this property on an empty interval will always throw a
+        /// <see cref="NullReferenceException"/>.
+        /// </summary>
         public override Bound<T> UpperBound =>
             throw new NullReferenceException("Upper bound is undefined on empty interval.");
 
+        /// <summary>
+        /// The lower bound. Calling this property on an empty interval will always throw a
+        /// <see cref="NullReferenceException"/>.
+        /// </summary>
         public override Bound<T> LowerBound =>
             throw new NullReferenceException("Lower bound is undefined on empty interval.");
 
+       /// <inheritdoc/>
         public override string ToString() {
             return "∅";
         }
 
-        public override bool IsEmpty() => true;
+       /// <inheritdoc/>
+       public override bool IsEmpty() => true;
     }
 }

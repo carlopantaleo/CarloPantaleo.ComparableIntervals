@@ -106,34 +106,70 @@ namespace CarloPantaleo.ComparableIntervals {
             return bound._value;
         }
 
+        /// <summary>
+        /// Compares a bound to a value following the comparison rules for bounds (see <see cref="Bound{T}"/>).
+        /// </summary>
         public static bool operator <(Bound<T> left, T right) => (Compare(right, left) ?? 1) > 0;
 
+        /// <summary>
+        /// Compares a bound to a value following the comparison rules for bounds (see <see cref="Bound{T}"/>).
+        /// </summary>
         public static bool operator <=(Bound<T> left, T right) => (Compare(right, left) ?? 1) >= 0;
 
+        /// <summary>
+        /// Compares a bound to a value following the comparison rules for bounds (see <see cref="Bound{T}"/>).
+        /// </summary>
         public static bool operator >(Bound<T> left, T right) => (Compare(right, left) ?? -1) < 0;
 
+        /// <summary>
+        /// Compares a bound to a value following the comparison rules for bounds (see <see cref="Bound{T}"/>).
+        /// </summary>
         public static bool operator >=(Bound<T> left, T right) => (Compare(right, left) ?? -1) <= 0;
 
+        /// <summary>
+        /// Compares a value to a bound following the comparison rules for bounds (see <see cref="Bound{T}"/>).
+        /// </summary>
         public static bool operator <(T left, Bound<T> right) => (Compare(left, right) ?? -1) < 0;
 
+        /// <summary>
+        /// Compares a value to a bound following the comparison rules for bounds (see <see cref="Bound{T}"/>).
+        /// </summary>
         public static bool operator <=(T left, Bound<T> right) => (Compare(left, right) ?? -1) <= 0;
 
+        /// <summary>
+        /// Compares a value to a bound following the comparison rules for bounds (see <see cref="Bound{T}"/>).
+        /// </summary>
         public static bool operator >(T left, Bound<T> right) => (Compare(left, right) ?? 1) > 0;
 
+        /// <summary>
+        /// Compares a value to a bound following the comparison rules for bounds (see <see cref="Bound{T}"/>).
+        /// </summary>
         public static bool operator >=(T left, Bound<T> right) => (Compare(left, right) ?? 1) >= 0;
 
+        /// <summary>
+        /// Compares two bounds following the comparison rules for bounds (see <see cref="Bound{T}"/>).
+        /// </summary>
         public static bool operator <(Bound<T> left, Bound<T> right) =>
             (Compare(left, right) ??
              (left._type == BoundType.PositiveInfinity || left._type == BoundType.NegativeInfinity ? 1 : -1)) < 0;
 
+        /// <summary>
+        /// Compares two bounds following the comparison rules for bounds (see <see cref="Bound{T}"/>).
+        /// </summary>
         public static bool operator <=(Bound<T> left, Bound<T> right) => 
             (Compare(left, right) ?? 
              (left._type == BoundType.PositiveInfinity || left._type == BoundType.NegativeInfinity ? 1 : -1)) <= 0;
 
+        /// <summary>
+        /// Compares two bounds following the comparison rules for bounds (see <see cref="Bound{T}"/>).
+        /// </summary>
         public static bool operator >(Bound<T> left, Bound<T> right) => 
             (Compare(left, right) ?? 
              (left._type == BoundType.PositiveInfinity || left._type == BoundType.NegativeInfinity ? -1 : 1)) > 0;
 
+        /// <summary>
+        /// Compares two bounds following the comparison rules for bounds (see <see cref="Bound{T}"/>).
+        /// </summary>
         public static bool operator >=(Bound<T> left, Bound<T> right) => 
             (Compare(left, right) ?? 
              (left._type == BoundType.PositiveInfinity || left._type == BoundType.NegativeInfinity ? -1 : 1)) >= 0;
@@ -186,24 +222,35 @@ namespace CarloPantaleo.ComparableIntervals {
                    EqualityComparer<T>.Default.Equals(_value, other._value) && _type == other._type;
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj) {
             return obj is Bound<T> other && Equals(other);
         }
 
+        /// <inheritdoc/>
         public override int GetHashCode() {
             unchecked {
                 return (EqualityComparer<T>.Default.GetHashCode(_value) * 397) ^ (int) _type;
             }
         }
 
+        /// <summary>
+        /// Checks if two bounds are equal following the comparison rules (see <see cref="Bound{T}"/>).
+        /// </summary>
         public static bool operator ==(Bound<T> left, Bound<T> right) {
             return Equals(left, right);
         }
 
+        /// <summary>
+        /// Checks if two bounds are not equal following the comparison rules (see <see cref="Bound{T}"/>).
+        /// </summary>
         public static bool operator !=(Bound<T> left, Bound<T> right) {
             return !Equals(left, right);
         }
 
+        /// <summary>
+        /// Returns a string representation of the bound.
+        /// </summary>
         public override string ToString() {
             switch (_type) {
                 case BoundType.Closed:
