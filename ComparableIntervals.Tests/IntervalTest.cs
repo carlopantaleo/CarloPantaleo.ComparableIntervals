@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace CarloPantaleo.ComparableIntervals.Tests {
+namespace ComparableIntervals.Tests {
     public class IntervalTest {
         [Theory]
         [MemberData(nameof(IntersectionData))]

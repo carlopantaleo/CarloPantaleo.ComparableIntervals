@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CarloPantaleo.ComparableIntervals {
+namespace ComparableIntervals {
     /// <summary>
     /// A bound to be used in <see cref="Interval{T}"/>s.
     /// </summary>

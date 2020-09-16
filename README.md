@@ -1,4 +1,4 @@
-# CarloPantaleo.ComparableIntervals
+# ComparableIntervals
 
 A library which helps doing common operations, such as _union_, _intersection_ or _complement_, on intervals of
 `IComparable` types.

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarloPantaleo.ComparableIntervals.Tests", "CarloPantaleo.ComparableIntervals.Tests\CarloPantaleo.ComparableIntervals.Tests.csproj", "{0BB14AF6-0E31-4C47-A841-36E80C096703}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComparableIntervals.Tests", "ComparableIntervals.Tests\ComparableIntervals.Tests.csproj", "{0BB14AF6-0E31-4C47-A841-36E80C096703}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarloPantaleo.ComparableIntervals", "CarloPantaleo.ComparableIntervals\CarloPantaleo.ComparableIntervals.csproj", "{F3583190-1263-4229-8807-45E110F7DC1B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComparableIntervals", "ComparableIntervals\ComparableIntervals.csproj", "{F3583190-1263-4229-8807-45E110F7DC1B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CarloPantaleo.ComparableIntervals {
+namespace ComparableIntervals {
     /// <summary>
     /// Utility class which provides some static methods to handle collections of intervals.
     /// </summary>

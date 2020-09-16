@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CarloPantaleo.ComparableIntervals {
+namespace ComparableIntervals {
     /// <summary>
     /// Represents an interval of type <see cref="T"/>.
     /// </summary>

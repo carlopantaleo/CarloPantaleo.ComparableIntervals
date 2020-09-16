@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace CarloPantaleo.ComparableIntervals.Tests {
+namespace ComparableIntervals.Tests {
     public class IntervalsTest {
         [Theory]
         [MemberData(nameof(FlattenData))]

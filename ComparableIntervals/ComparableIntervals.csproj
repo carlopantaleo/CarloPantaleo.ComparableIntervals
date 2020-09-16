@@ -5,15 +5,16 @@
     <Version>1.1.0</Version>
     <Company />
     <Authors>Carlo Pantaleo</Authors>
-    <RepositoryUrl>https://github.com/carlopantaleo/CarloPantaleo.ComparableIntervals</RepositoryUrl>
+    <RepositoryUrl>https://github.com/carlopantaleo/ComparableIntervals</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>intervals ranges comparable union intersection complement</PackageTags>
     <TargetFrameworks>net40;net45;net451;net452;net46;net461;net472;netstandard2.0</TargetFrameworks>
-    <PackageVersion>1.2.0</PackageVersion>
+    <PackageVersion>2.0.0</PackageVersion>
+    <Title>Comparable Intervals</Title>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>D:\Projects\Microsoft\StandAlone\CarloPantaleo.ComparableIntervals\CarloPantaleo.ComparableIntervals\obj\CarloPantaleo.ComparableIntervals.xml</DocumentationFile>
+    <DocumentationFile>D:\Projects\Microsoft\StandAlone\ComparableIntervals\ComparableIntervals\obj\ComparableIntervals.xml</DocumentationFile>
   </PropertyGroup>
 
 </Project>

@@ -9,8 +9,8 @@
     <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CarloPantaleo.ComparableIntervals.Tests</RootNamespace>
-    <AssemblyName>CarloPantaleo.ComparableIntervals.Tests</AssemblyName>
+    <RootNamespace>ComparableIntervals.Tests</RootNamespace>
+    <AssemblyName>ComparableIntervals.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -68,9 +68,9 @@
     <Analyzer Include="..\packages\xunit.analyzers.0.10.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CarloPantaleo.ComparableIntervals\CarloPantaleo.ComparableIntervals.csproj">
+    <ProjectReference Include="..\ComparableIntervals\ComparableIntervals.csproj">
       <Project>{f3583190-1263-4229-8807-45e110f7dc1b}</Project>
-      <Name>CarloPantaleo.ComparableIntervals</Name>
+      <Name>ComparableIntervals</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
