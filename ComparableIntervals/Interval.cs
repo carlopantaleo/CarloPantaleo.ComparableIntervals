@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ComparableIntervals {
     /// <summary>
@@ -193,6 +194,57 @@ namespace ComparableIntervals {
     /// Interval operations are implemented as extension methods, so they can be called as static or instance methods.
     /// </summary>
     public static class IntervalExtensions {
+        private static readonly HashSet<Type> IntegralTypes = new HashSet<Type>
+        {
+            typeof(byte),
+            typeof(sbyte),
+            typeof(ushort),
+            typeof(uint),
+            typeof(ulong),
+            typeof(short),
+            typeof(int),
+            typeof(long)
+        };
+
+        /// <summary>
+        /// Checks if two intervals are adjacent, i.e. the union of the two intervals is a connected set, but their
+        /// intersection is empty.
+        /// </summary>
+        /// <param name="first">The first interval.</param>
+        /// <param name="second">The second interval.</param>
+        /// <typeparam name="T">The type of the two intervals.</typeparam>
+        /// <returns>True if they are adjacent, false otherwise.</returns>
+        public static bool IsAdjacentTo<T>(this Interval<T> first, Interval<T> second) where T : IComparable {
+            if (first.IsEmpty() || second.IsEmpty() || !UncheckedIntersection(first, second).IsEmpty()) {
+                return false;
+            }
+
+            return UncheckedAreAdjacent(first, second);
+        }
+
+        /// <summary>
+        /// Checks if two intervals are adjacent given that they are not empty and their intersection is empty.
+        /// </summary>
+        private static bool UncheckedAreAdjacent<T>(Interval<T> first, Interval<T> second) where T : IComparable {
+            // Sort intervals
+            Interval<T> sFirst, sSecond;
+            if (first.LowerBound < second.LowerBound) {
+                sFirst = first;
+                sSecond = second;
+            } else {
+                sFirst = second;
+                sSecond = first;
+            }
+
+            // Compare first's upper bound with second's lower bound
+            var leftBound = sFirst.UpperBound;
+            var rightBound = sSecond.LowerBound;
+            return ((T) leftBound).CompareTo((T) rightBound) == 0 &&
+                   (leftBound.IsOpen() && rightBound.IsClosed() || leftBound.IsClosed() && rightBound.IsOpen()) ||
+                   IntegralTypes.Contains(typeof(T)) && leftBound.IsClosed() && rightBound.IsClosed() &&
+                   Convert.ToInt64((T) leftBound) + 1 == Convert.ToInt64((T) rightBound);
+        }
+
         /// <summary>
         /// Gets the intersection of two intervals.
         /// </summary>
@@ -227,7 +279,7 @@ namespace ComparableIntervals {
                 return first;
             }
 
-            if (UncheckedIntersection(first, second).IsEmpty()) {
+            if (UncheckedIntersection(first, second).IsEmpty() && !UncheckedAreAdjacent(first, second)) {
                 return Interval<T>.Empty();
             }
             
