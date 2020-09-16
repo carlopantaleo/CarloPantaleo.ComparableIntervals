@@ -34,7 +34,7 @@ namespace ComparableIntervals {
         /// </summary>
         /// <param name="value">The boundary value.</param>
         /// <returns>The bound.</returns>
-        /// <exception cref="ArgumentNullException">If <see cref="value"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">If <c>value</c> is null.</exception>
         public static Bound<T> Closed(T value) {
             if (value == null) {
                 throw new ArgumentNullException(nameof(value));
@@ -48,7 +48,7 @@ namespace ComparableIntervals {
         /// </summary>
         /// <param name="value">The boundary value.</param>
         /// <returns>The bound.</returns>
-        /// <exception cref="ArgumentNullException">If <see cref="value"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">If <c>value</c> is null.</exception>
         public static Bound<T> Open(T value) {
             if (value == null) {
                 throw new ArgumentNullException(nameof(value));

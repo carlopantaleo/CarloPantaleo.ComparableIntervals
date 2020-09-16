@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ComparableIntervals {
     /// <summary>
-    /// Represents an interval of type <see cref="T"/>.
+    /// Represents an interval of type <c>T</c>.
     /// </summary>
     /// <typeparam name="T">The type of the interval.</typeparam>
     public class Interval<T> where T : IComparable {
