@@ -7,4 +7,4 @@ install:
 
 script:
     - dotnet build ComparableIntervals -f netstandard2.1
-    - dotnet test -f netcoreapp3.1
+    - dotnet test -f net5.0
