@@ -1,5 +1,7 @@
 # ComparableIntervals
 
+[![Build Status](https://travis-ci.com/carlopantaleo/ComparableIntervals.svg?branch=master)](https://travis-ci.com/carlopantaleo/ComparableIntervals)
+
 A library which helps doing common operations, such as _union_, _intersection_ or _complement_, on intervals of
 `IComparable` types.
 
@@ -22,7 +24,7 @@ var interval2 = Interval<int>.Open(3, 7);
 Perform some operations on them:
 ```c#
 var intersection = interval1.Intersection(interval2); // => (3, 5]
-var Union = interval1.Union(interval2); // => [1, 7)
+var union = interval1.Union(interval2); // => [1, 7)
 ```
 
 Perform operations on lists of intervals:
@@ -42,7 +44,7 @@ var complement = Intervals.Complement(intervals1); // => (-∞, -2), [2, 4], (8,
 
 ## Library structure
 
-This library library exposes a few objects to build and compute intervals.
+This library exposes a few objects to build and compute intervals.
 
 `struct Bound<T>`: represents a bound of type `T`, where `T : IComparable`.
 A bound may be open, closed, or may represent negative or positive infinity. Methods to create those types of bounds
