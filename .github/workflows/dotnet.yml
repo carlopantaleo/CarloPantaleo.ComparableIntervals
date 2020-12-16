@@ -25,5 +25,5 @@ jobs:
     - name: Build
       run: dotnet build ComparableIntervals -f netstandard2.1
     - name: Test
-      run: dotnet test -f netcoreapp3.1 -verbosity normal
+      run: dotnet test -f netcoreapp3.1 --verbosity normal
 
