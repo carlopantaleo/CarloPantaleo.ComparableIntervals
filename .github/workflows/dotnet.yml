@@ -7,16 +7,54 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
-
+  build_test_linux:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        dotnet: [ '2.2.103', '3.0', '3.1.x', '5.0.x' ]
+    name: Linux build and test (${{ matrix.dotnet }})
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.404
+        dotnet-version: ${{ matrix.dotnet }}
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build ComparableIntervals -f netstandard2.0 --no-restore
+    - name: Test
+      run: dotnet test -f netcoreapp3.1 --verbosity normal
+  build_test_windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        dotnet: [ '2.2.103', '3.0', '3.1.x', '5.0.x' ]
+    name: Windows build and test (${{ matrix.dotnet }})
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ matrix.dotnet }}
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build ComparableIntervals -f netstandard2.0 --no-restore
+    - name: Test
+      run: dotnet test -f netcoreapp3.1 --verbosity normal
+  build_test_mac:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        dotnet: [ '2.2.103', '3.0', '3.1.x', '5.0.x' ]
+    name: macOS build and test (${{ matrix.dotnet }})
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ matrix.dotnet }}
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
