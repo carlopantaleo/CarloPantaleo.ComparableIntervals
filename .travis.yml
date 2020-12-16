@@ -6,5 +6,5 @@ install:
     - dotnet restore
 
 script:
-    - dotnet build
+    - dotnet build ComparableIntervals -f netstandard2.0
     - dotnet test
