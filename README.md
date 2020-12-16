@@ -1,6 +1,7 @@
 # ComparableIntervals
 
 [![Build Status](https://travis-ci.com/carlopantaleo/ComparableIntervals.svg?branch=master)](https://travis-ci.com/carlopantaleo/ComparableIntervals)
+![.NET](https://github.com/carlopantaleo/ComparableIntervals/workflows/.NET/badge.svg)
 
 A library which helps doing common operations, such as _union_, _intersection_ or _complement_, on intervals of
 `IComparable` types.
